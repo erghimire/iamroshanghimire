@@ -428,7 +428,7 @@
 .testimonial-carousel .owl-dot.active::after {
     background: var(--primary);
 }
-}
+
 .fa-tiktok {
 			color: #fff;
 			font-size: 36em;
