@@ -5,18 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minor Project: Digital Alarm Clock with Thermometer</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+
         body {
-            font-family: 'Times New Roman', Times, serif; /* Change font-family */
+            font-family: 'Times New Roman', Times, serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f2f2f2;
             color: #333;
+            line-height: 1.6;
         }
         header {
             background-color: #007bff;
-            color: #fff;
-            padding: 20px;
+            color: white;
+            padding: 10px;
             text-align: center;
+            border-bottom: 2px solid #0056b3;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            animation: fadeIn 2s;
         }
         main {
             max-width: 800px;
@@ -24,25 +33,97 @@
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: justify;
         }
-        h1, h2, h3 {
+        h2, h3 {
             color: #007bff;
+            text-align: center;
+            animation: fadeIn 2s;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        p, ul {
+            animation: fadeIn 2s;
         }
         p {
-            line-height: 1.6;
-            text-align: justify;
+            margin-bottom: 20px;
         }
         ul {
             list-style-type: disc;
             padding-left: 20px;
-            text-align: justify;
+        }
+        ul li {
+            margin-bottom: 10px;
         }
         img {
             max-width: 100%;
             height: auto;
             margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .project-photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .project-photo {
+            margin: 10px;
+        }
+        .member-photos {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .member-photo {
+            margin: 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .member-photo img {
+            width: 100%;
+            height: auto;
+        }
+        .member-photo p {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 5px;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .member-photo:hover p {
+            opacity: 1;
+        }
+        .member-photo:hover, .project-photo:hover {
+            transform: scale(1.05);
+        }
+        h2:hover, h3:hover {
+            color: #FF5733;
+            transform: scale(1.1);
+        }
+        p:hover, ul:hover {
+            color: #FF5733;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -74,26 +155,34 @@
     </ul>
 
     <h2>Project Team</h2>
-    <p>
-        The project was developed by a group of four members:
-    </p>
-    <ul>
-        <li>Member 1: Kobid Karki</li>
-        <li>Member 2: Lizana Khadka</li>
-        <li>Member 3: Rashmi Paudel</li>
-        <li>Member 4: Roshan Ghimire</li>
-    </ul>
+    <div class="member-photos">
+        <div class="member-photo">
+            <img src="member1_photo.jpg" alt="Member 1 Photo">
+            <p>Kobid Karki</p>
+        </div>
+        <div class="member-photo">
+            <img src="member2_photo.jpg" alt="Member 2 Photo">
+            <p>Lizana Khadka</p>
+        </div>
+        <div class="member-photo">
+            <img src="member3_photo.jpg" alt="Member 3 Photo">
+            <p>Rashmi Paudel</p>
+        </div>
+        <div class="member-photo">
+            <img src="member4_photo.jpg" alt="Member 4 Photo">
+            <p>Roshan Ghimire</p>
+        </div>
+    </div>
 
     <h2>Photos</h2>
-    <h3>Project Photos</h3>
-    <img src="project_photo1.jpg" alt="Project Photo 1">
-    <img src="project_photo2.jpg" alt="Project Photo 2">
-
-    <h3>Group Member Photos</h3>
-    <img src="member1_photo.jpg" alt="Member 1 Photo">
-    <img src="member2_photo.jpg" alt="Member 2 Photo">
-    <img src="member3_photo.jpg" alt="Member 3 Photo">
-    <img src="member4_photo.jpg" alt="Member 4 Photo">
+    <div class="project-photos">
+        <div class="project-photo">
+            <img src="project_photo1.jpg" alt="Project Photo 1">
+        </div>
+        <div class="project-photo">
+            <img src="project_photo2.jpg" alt="Project Photo 2">
+        </div>
+    </div>
 </main>
 
 </body>
