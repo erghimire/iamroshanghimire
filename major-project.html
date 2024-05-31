@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Major Project: Cell Phone Based Voting Machine with Voice Acknowledgement</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+
         body {
-            font-family: 'Times New Roman', Times, serif; /* Change font-family */
+            font-family: 'Times New Roman', Times, serif;
             margin: 0;
             padding: 0;
             background-color: #f2f2f2;
@@ -16,9 +18,14 @@
         header {
             background-color: #4CAF50;
             color: white;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
             border-bottom: 2px solid #388E3C;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            animation: fadeIn 2s;
         }
         main {
             max-width: 800px;
@@ -29,9 +36,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: justify;
         }
-        h1, h2, h3 {
+        h2, h3 {
             color: #4CAF50;
             text-align: center;
+            animation: fadeIn 2s;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        p, ul {
+            animation: fadeIn 2s;
         }
         p {
             margin-bottom: 20px;
@@ -39,6 +51,9 @@
         ul {
             list-style-type: disc;
             padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
         }
         img {
             max-width: 100%;
@@ -94,6 +109,21 @@
         }
         .member-photo:hover, .project-photo:hover {
             transform: scale(1.05);
+        }
+        h2:hover, h3:hover {
+            color: #FF5733;
+            transform: scale(1.1);
+        }
+        p:hover, ul:hover {
+            color: #FF5733;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
