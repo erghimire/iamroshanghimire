@@ -11,12 +11,14 @@
             padding: 0;
             background-color: #f2f2f2;
             color: #333;
+            line-height: 1.6;
         }
         header {
             background-color: #4CAF50;
             color: white;
             padding: 20px;
             text-align: center;
+            border-bottom: 2px solid #388E3C;
         }
         main {
             max-width: 800px;
@@ -24,25 +26,52 @@
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: justify;
         }
         h1, h2, h3 {
             color: #4CAF50;
+            text-align: center;
         }
         p {
-            line-height: 1.6;
-            text-align: justify;
+            margin-bottom: 20px;
         }
         ul {
             list-style-type: disc;
             padding-left: 20px;
-            text-align: justify;
         }
         img {
             max-width: 100%;
             height: auto;
             margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .project-photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .project-photo {
+            margin: 10px;
+        }
+        .member-photos {
+            display: flex;
+            justify-content: center;
+        }
+        .member-photo {
+            margin: 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+        }
+        .member-photo img {
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -75,26 +104,34 @@
     </ul>
 
     <h2>Project Team</h2>
-    <p>
-        The project was developed by a group of four members:
-    </p>
-    <ul>
-        <li>Member 1: Kobid Karki</li>
-        <li>Member 2: Lizana Khadka</li>
-        <li>Member 3: Rashmi Paudel</li>
-        <li>Member 4: Roshan Ghimire</li>
-    </ul>
+    <div class="member-photos">
+        <div class="member-photo">
+            <img src="member1_photo.jpg" alt="Member 1 Photo">
+            <p>Kobid Karki</p>
+        </div>
+        <div class="member-photo">
+            <img src="member2_photo.jpg" alt="Member 2 Photo">
+            <p>Lizana Khadka</p>
+        </div>
+        <div class="member-photo">
+            <img src="member3_photo.jpg" alt="Member 3 Photo">
+            <p>Rashmi Paudel</p>
+        </div>
+        <div class="member-photo">
+            <img src="member4_photo.jpg" alt="Member 4 Photo">
+            <p>Roshan Ghimire</p>
+        </div>
+    </div>
 
     <h2>Photos</h2>
-    <h3>Project Photos</h3>
-    <img src="project_photo1.jpg" alt="Project Photo 1">
-    <img src="project_photo2.jpg" alt="Project Photo 2">
-
-    <h3>Group Member Photos</h3>
-    <img src="member1_photo.jpg" alt="Member 1 Photo">
-    <img src="member2_photo.jpg" alt="Member 2 Photo">
-    <img src="member3_photo.jpg" alt="Member 3 Photo">
-    <img src="member4_photo.jpg" alt="Member 4 Photo">
+    <div class="project-photos">
+        <div class="project-photo">
+            <img src="project_photo1.jpg" alt="Project Photo 1">
+        </div>
+        <div class="project-photo">
+            <img src="project_photo2.jpg" alt="Project Photo 2">
+        </div>
+    </div>
 </main>
 
 </body>
