@@ -1,247 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Photo Album</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f0f0f0;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Photo Album</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; background-color:#f0f0f0; color:#333; }
+header { background-color:#4CAF50; color:white; padding:20px; text-align:center; }
+h1 { margin:0; }
+.album-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; padding:20px; }
+.photo-card { background-color:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:transform 0.3s; cursor:pointer; }
+.photo-card:hover { transform:scale(1.05); }
+.photo-card img { width:100%; height:200px; object-fit:cover; }
+.caption { padding:10px; text-align:center; font-weight:bold; }
+@media(max-width:600px){ .photo-card img{ height:150px; } }
 
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+/* Lightbox */
+.lightbox { display:none; position:fixed; z-index:999; padding-top:60px; left:0; top:0; width:100%; height:100%; overflow:auto; background-color: rgba(0,0,0,0.9);}
+.lightbox-content { margin:auto; display:block; max-width:80%; max-height:60%; border-radius:10px; opacity:0; transition:opacity 0.5s ease-in-out; }
+.lightbox-content.show { opacity:1; }
+.lightbox-caption { margin:auto; display:block; text-align:center; color:#fff; padding:10px; font-size:18px; }
+.close, .prev, .next, .play-pause, .fullscreen { position:absolute; top:50%; color:#fff; font-size:40px; font-weight:bold; cursor:pointer; user-select:none; padding:10px; border-radius:50%; background-color:rgba(0,0,0,0.3); transform:translateY(-50%);}
+.close { top:20px; right:35px; transform:none; }
+.play-pause { top:20px; left:35px; font-size:30px; transform:none; }
+.fullscreen { top:20px; left:90px; font-size:30px; transform:none;}
+.close:hover, .prev:hover, .next:hover, .play-pause:hover, .fullscreen:hover { background-color: rgba(0,0,0,0.6); }
+.prev { left:10px; }
+.next { right:10px; }
 
-        h1 { margin: 0; }
+/* Thumbnail strip */
+.thumbnail-strip { display:flex; gap:10px; margin-top:20px; padding-bottom:20px; overflow-x:auto; cursor:grab; }
+.thumbnail-strip:active { cursor:grabbing; }
+.thumbnail-container { position:relative; display:inline-block; flex:0 0 auto; }
+.thumbnail-strip img { width:80px; height:60px; object-fit:cover; border:2px solid transparent; border-radius:5px; transition: transform 0.2s, border 0.2s;}
+.thumbnail-strip img:hover { transform:scale(1.1); border-color:#4CAF50; }
+.thumbnail-active { border-color:#4CAF50; }
+.thumbnail-caption { position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.6); color:#fff; font-size:12px; text-align:center; padding:2px; opacity:0; transition:opacity 0.3s; border-radius:0 0 5px 5px; }
+.thumbnail-container:hover .thumbnail-caption { opacity:1; }
 
-        .album-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            padding: 20px;
-        }
-
-        .photo-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-
-        .photo-card:hover { transform: scale(1.05); }
-
-        .photo-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .caption {
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        @media(max-width: 600px){
-            .photo-card img { height: 150px; }
-        }
-
-        /* Lightbox styles */
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            padding-top: 60px;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-        }
-
-        .lightbox-content {
-            margin: auto;
-            display: block;
-            max-width: 80%;
-            max-height: 60%;
-            border-radius: 10px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .lightbox-content.show {
-            opacity: 1;
-        }
-
-        .lightbox-caption {
-            margin: auto;
-            display: block;
-            text-align: center;
-            color: #fff;
-            padding: 10px;
-            font-size: 18px;
-        }
-
-        .close, .prev, .next {
-            position: absolute;
-            top: 50%;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            padding: 10px;
-            border-radius: 50%;
-            background-color: rgba(0,0,0,0.3);
-            transform: translateY(-50%);
-        }
-
-        .close { top: 20px; right: 35px; transform: none; }
-        .close:hover, .prev:hover, .next:hover { background-color: rgba(0,0,0,0.6); }
-
-        .prev { left: 10px; }
-        .next { right: 10px; }
-
-        /* Thumbnail strip */
-        .thumbnail-strip {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            padding-bottom: 20px;
-        }
-
-        .thumbnail-strip img {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border: 2px solid transparent;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.2s, border 0.2s;
-        }
-
-        .thumbnail-strip img:hover { transform: scale(1.1); border-color: #4CAF50; }
-        .thumbnail-active { border-color: #4CAF50; }
-    </style>
+</style>
 </head>
 <body>
-    <header>
-        <h1>My Photo Album</h1>
-        <p>Collection of my favorite memories</p>
-    </header>
+<header>
+<h1>My Photo Album</h1>
+<p>Collection of my favorite memories</p>
+</header>
 
-    <div class="album-container">
-        <div class="photo-card" onclick="openLightbox(0)">
-            <img src="photos/photo1.jpg" alt="Photo 1">
-            <div class="caption">Caption 1</div>
-        </div>
-        <div class="photo-card" onclick="openLightbox(1)">
-            <img src="photos/photo2.jpg" alt="Photo 2">
-            <div class="caption">Caption 2</div>
-        </div>
-        <div class="photo-card" onclick="openLightbox(2)">
-            <img src="photos/photo3.jpg" alt="Photo 3">
-            <div class="caption">Caption 3</div>
-        </div>
-        <div class="photo-card" onclick="openLightbox(3)">
-            <img src="photos/photo4.jpg" alt="Photo 4">
-            <div class="caption">Caption 4</div>
-        </div>
-        <!-- Add more photo cards here -->
-    </div>
+<div class="album-container">
+<div class="photo-card" onclick="openLightbox(0)"><img src="photos/photo1.jpg" alt="Photo 1"><div class="caption">Caption 1</div></div>
+<div class="photo-card" onclick="openLightbox(1)"><img src="photos/photo2.jpg" alt="Photo 2"><div class="caption">Caption 2</div></div>
+<div class="photo-card" onclick="openLightbox(2)"><img src="photos/photo3.jpg" alt="Photo 3"><div class="caption">Caption 3</div></div>
+<div class="photo-card" onclick="openLightbox(3)"><img src="photos/photo4.jpg" alt="Photo 4"><div class="caption">Caption 4</div></div>
+</div>
 
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="lightbox">
-        <span class="close" onclick="closeLightbox()">&times;</span>
-        <span class="prev" onclick="changeSlide(-1)">&#10094;</span>
-        <span class="next" onclick="changeSlide(1)">&#10095;</span>
-        <img class="lightbox-content" id="lightbox-img">
-        <div class="lightbox-caption" id="lightbox-caption"></div>
-        <div class="thumbnail-strip" id="thumbnail-strip"></div>
-    </div>
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox">
+<span class="close" onclick="closeLightbox()">&times;</span>
+<span class="play-pause" onclick="toggleSlideshow()" id="playPause">&#9658;</span>
+<span class="fullscreen" onclick="toggleFullScreen()">&#x26F6;</span>
+<span class="prev" onclick="changeSlide(-1)">&#10094;</span>
+<span class="next" onclick="changeSlide(1)">&#10095;</span>
+<img class="lightbox-content" id="lightbox-img">
+<div class="lightbox-caption" id="lightbox-caption"></div>
+<div class="thumbnail-strip" id="thumbnail-strip"></div>
+</div>
 
-    <script>
-        const photos = [
-            { src: "photos/photo1.jpg", caption: "Caption 1" },
-            { src: "photos/photo2.jpg", caption: "Caption 2" },
-            { src: "photos/photo3.jpg", caption: "Caption 3" },
-            { src: "photos/photo4.jpg", caption: "Caption 4" },
-            // Add more photos here
-        ];
+<script>
+const photos=[
+{src:"photos/photo1.jpg", caption:"Caption 1"},
+{src:"photos/photo2.jpg", caption:"Caption 2"},
+{src:"photos/photo3.jpg", caption:"Caption 3"},
+{src:"photos/photo4.jpg", caption:"Caption 4"}
+];
 
-        let currentIndex = 0;
+let currentIndex=0;
+let slideshowInterval=null;
+let startX=0;
+let isDown=false;
+let startScrollLeft=0;
 
-        function openLightbox(index) {
-            currentIndex = index;
-            document.getElementById('lightbox').style.display = "block";
-            generateThumbnails();
-            showSlide(currentIndex);
-        }
+function openLightbox(index){ currentIndex=index; document.getElementById('lightbox').style.display="block"; generateThumbnails(); showSlide(currentIndex); }
+function closeLightbox(){ document.getElementById('lightbox').style.display="none"; stopSlideshow(); if(document.fullscreenElement) document.exitFullscreen(); }
+function changeSlide(n){ currentIndex+=n; if(currentIndex<0) currentIndex=photos.length-1; if(currentIndex>=photos.length) currentIndex=0; showSlide(currentIndex); }
+function showSlide(index){ const lightboxImg=document.getElementById('lightbox-img'); const lightboxCaption=document.getElementById('lightbox-caption'); lightboxImg.classList.remove('show'); setTimeout(()=>{ lightboxImg.src=photos[index].src; lightboxCaption.innerText=photos[index].caption; lightboxImg.classList.add('show'); },100); updateActiveThumbnail(); }
+function generateThumbnails(){ const strip=document.getElementById('thumbnail-strip'); strip.innerHTML=""; photos.forEach((photo, idx)=>{ const container=document.createElement('div'); container.className="thumbnail-container"; const thumb=document.createElement('img'); thumb.src=photo.src; thumb.alt=photo.caption; thumb.onclick=()=>{ currentIndex=idx; showSlide(currentIndex); stopSlideshow(); }; const caption=document.createElement('div'); caption.className="thumbnail-caption"; caption.innerText=photo.caption; container.appendChild(thumb); container.appendChild(caption); strip.appendChild(container); }); updateActiveThumbnail(); }
+function updateActiveThumbnail(){ const thumbs=document.querySelectorAll('#thumbnail-strip img'); thumbs.forEach((thumb, idx)=>{ thumb.classList.toggle('thumbnail-active', idx===currentIndex); }); }
+function startSlideshow(){ if(slideshowInterval) return; slideshowInterval=setInterval(()=>{ changeSlide(1); },3000); document.getElementById('playPause').innerHTML="&#10074;&#10074;"; }
+function stopSlideshow(){ clearInterval(slideshowInterval); slideshowInterval=null; document.getElementById('playPause').innerHTML="&#9658;"; }
+function toggleSlideshow(){ if(slideshowInterval) stopSlideshow(); else startSlideshow(); }
+function toggleFullScreen(){ const lightbox=document.getElementById('lightbox'); if(!document.fullscreenElement){ lightbox.requestFullscreen(); } else { document.exitFullscreen(); } }
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = "none";
-        }
+// Keyboard
+document.addEventListener('keydown', e=>{ const lightbox=document.getElementById('lightbox'); if(lightbox.style.display==="block"){ if(e.key==="ArrowLeft") changeSlide(-1); if(e.key==="ArrowRight") changeSlide(1); if(e.key==="Escape") closeLightbox(); if(e.key===" ") { e.preventDefault(); toggleSlideshow(); } } });
 
-        function changeSlide(n) {
-            currentIndex += n;
-            if(currentIndex < 0) currentIndex = photos.length - 1;
-            if(currentIndex >= photos.length) currentIndex = 0;
-            showSlide(currentIndex);
-        }
+// Touch swipe
+lightbox.addEventListener('touchstart', e=>{ startX=e.touches[0].clientX; }, false);
+lightbox.addEventListener('touchend', e=>{ let endX=e.changedTouches[0].clientX; let diff=endX-startX; if(Math.abs(diff)>50){ if(diff>0) changeSlide(-1); else changeSlide(1); } }, false);
 
-        function showSlide(index) {
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxCaption = document.getElementById('lightbox-caption');
-
-            lightboxImg.classList.remove('show');
-            setTimeout(() => {
-                lightboxImg.src = photos[index].src;
-                lightboxCaption.innerText = photos[index].caption;
-                lightboxImg.classList.add('show');
-            }, 100);
-
-            updateActiveThumbnail();
-        }
-
-        function generateThumbnails() {
-            const strip = document.getElementById('thumbnail-strip');
-            strip.innerHTML = "";
-            photos.forEach((photo, idx) => {
-                const thumb = document.createElement('img');
-                thumb.src = photo.src;
-                thumb.alt = photo.caption;
-                thumb.onclick = () => { currentIndex = idx; showSlide(currentIndex); };
-                strip.appendChild(thumb);
-            });
-            updateActiveThumbnail();
-        }
-
-        function updateActiveThumbnail() {
-            const thumbs = document.querySelectorAll('#thumbnail-strip img');
-            thumbs.forEach((thumb, idx) => {
-                thumb.classList.toggle('thumbnail-active', idx === currentIndex);
-            });
-        }
-
-        // Keyboard controls
-        document.addEventListener('keydown', function(event) {
-            const lightbox = document.getElementById('lightbox');
-            if(lightbox.style.display === "block") {
-                if(event.key === "ArrowLeft") changeSlide(-1);
-                if(event.key === "ArrowRight") changeSlide(1);
-                if(event.key === "Escape") closeLightbox();
-            }
-        });
-    </script>
+// Drag-scroll thumbnails
+const thumbStrip=document.getElementById('thumbnail-strip');
+thumbStrip.addEventListener('mousedown', e=>{ isDown=true; thumbStrip.classList.add('active'); startX=e.pageX-thumbStrip.offsetLeft; startScrollLeft=thumbStrip.scrollLeft; });
+thumbStrip.addEventListener('mouseleave', e=>{ isDown=false; thumbStrip.classList.remove('active'); });
+thumbStrip.addEventListener('mouseup', e=>{ isDown=false; thumbStrip.classList.remove('active'); });
+thumbStrip.addEventListener('mousemove', e=>{ if(!isDown) return; e.preventDefault(); const x=e.pageX-thumbStrip.offsetLeft; const walk=(x-startX)*2; thumbStrip.scrollLeft=startScrollLeft-walk; });
+</script>
 </body>
 </html>
