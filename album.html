@@ -1,45 +1,101 @@
-<main class="container">
-  <h1>Photo Album</h1>
-  <p class="lead">A collection of my memorable moments, professional highlights, and personal experiences.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Photo Album — Roshan Ghimire</title>
+  <meta name="description" content="Photo album page for Roshan Ghimire — personal and professional moments captured." />
 
-  <section class="gallery" aria-label="Photo gallery">
-    <div class="photo-card"><img src="/assets/photos/photo1.jpg" alt="Project workshop" loading="lazy"></div>
-    <div class="photo-card"><img src="/assets/photos/photo2.jpg" alt="Team collaboration" loading="lazy"></div>
-    <div class="photo-card"><img src="/assets/photos/photo3.jpg" alt="Public health conference" loading="lazy"></div>
-    <div class="photo-card"><img src="/assets/photos/photo4.jpg" alt="IT training session" loading="lazy"></div>
-    <div class="photo-card"><img src="/assets/photos/photo5.jpg" alt="Outdoor event" loading="lazy"></div>
-    <div class="photo-card"><img src="/assets/photos/photo6.jpg" alt="Graduation ceremony" loading="lazy"></div>
-  </section>
-</main>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> <!-- your existing CSS file -->
 
-<div class="lightbox" id="lightbox">
-  <span class="close-btn" id="closeBtn">&times;</span>
-  <img src="" alt="Expanded view" id="lightboxImg">
-</div>
+  <style>
+    /* Additional styles specific for album */
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px;}
+    .photo-card{background:rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s ease}
+    .photo-card:hover{transform:scale(1.03)}
+    .photo-card img{width:100%;height:180px;object-fit:cover;display:block}
+    @media(max-width:768px){.photo-card img{height:160px}}
 
-<script>
-  const galleryImages = document.querySelectorAll('.photo-card img');
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const closeBtn = document.getElementById('closeBtn');
+    /* Lightbox */
+    .lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;z-index:100;}
+    .lightbox img{max-width:90%;max-height:90%;border-radius:12px;}
+    .lightbox.active{display:flex}
+    .close-btn{position:absolute;top:20px;right:30px;font-size:32px;color:white;cursor:pointer;}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <img src="/assets/profile.jpg" alt="Roshan Ghimire portrait" loading="lazy">
+        <div>
+          <div style="font-weight:700">Roshan Ghimire</div>
+          <div style="font-size:13px;color:#94a3b8">IT & Public Health</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="album.html" class="active">Photo Album</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-  galleryImages.forEach(img => {
-    img.addEventListener('click', () => {
-      lightbox.classList.add('active');
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
+  <!-- Main Body (Photo Album) -->
+  <main class="container">
+    <h1>Photo Album</h1>
+    <p class="lead">A collection of my memorable moments, professional highlights, and personal experiences.</p>
+
+    <section class="gallery" aria-label="Photo gallery">
+      <div class="photo-card"><img src="/assets/photos/photo1.jpg" alt="Project workshop" loading="lazy"></div>
+      <div class="photo-card"><img src="/assets/photos/photo2.jpg" alt="Team collaboration" loading="lazy"></div>
+      <div class="photo-card"><img src="/assets/photos/photo3.jpg" alt="Public health conference" loading="lazy"></div>
+      <div class="photo-card"><img src="/assets/photos/photo4.jpg" alt="IT training session" loading="lazy"></div>
+      <div class="photo-card"><img src="/assets/photos/photo5.jpg" alt="Outdoor event" loading="lazy"></div>
+      <div class="photo-card"><img src="/assets/photos/photo6.jpg" alt="Graduation ceremony" loading="lazy"></div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close-btn" id="closeBtn">&times;</span>
+    <img src="" alt="Expanded view" id="lightboxImg">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Roshan Ghimire — All rights reserved. <a href="index.html">Back to home</a></p>
+  </footer>
+
+  <!-- Lightbox Script -->
+  <script>
+    const galleryImages = document.querySelectorAll('.photo-card img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeBtn = document.getElementById('closeBtn');
+
+    galleryImages.forEach(img => {
+      img.addEventListener('click', () => {
+        lightbox.classList.add('active');
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+      });
     });
-  });
 
-  closeBtn.addEventListener('click', () => {
-    lightbox.classList.remove('active');
-    lightboxImg.src = '';
-  });
-
-  lightbox.addEventListener('click', (e) => {
-    if(e.target === lightbox) {
+    closeBtn.addEventListener('click', () => {
       lightbox.classList.remove('active');
       lightboxImg.src = '';
-    }
-  });
-</script>
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if(e.target === lightbox) {
+        lightbox.classList.remove('active');
+        lightboxImg.src = '';
+      }
+    });
+  </script>
+</body>
+</html>
