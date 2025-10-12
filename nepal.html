@@ -19,9 +19,7 @@
             text-align: center;
         }
 
-        h1 {
-            margin: 0;
-        }
+        h1 { margin: 0; }
 
         .album-container {
             display: grid;
@@ -39,9 +37,7 @@
             cursor: pointer;
         }
 
-        .photo-card:hover {
-            transform: scale(1.05);
-        }
+        .photo-card:hover { transform: scale(1.05); }
 
         .photo-card img {
             width: 100%;
@@ -56,9 +52,7 @@
         }
 
         @media(max-width: 600px){
-            .photo-card img {
-                height: 150px;
-            }
+            .photo-card img { height: 150px; }
         }
 
         /* Lightbox styles */
@@ -67,10 +61,8 @@
             position: fixed;
             z-index: 999;
             padding-top: 60px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.9);
         }
@@ -79,8 +71,14 @@
             margin: auto;
             display: block;
             max-width: 80%;
-            max-height: 80%;
+            max-height: 60%;
             border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .lightbox-content.show {
+            opacity: 1;
         }
 
         .lightbox-caption {
@@ -92,19 +90,48 @@
             font-size: 18px;
         }
 
-        .close {
+        .close, .prev, .next {
             position: absolute;
-            top: 20px;
-            right: 35px;
+            top: 50%;
             color: #fff;
             font-size: 40px;
             font-weight: bold;
             cursor: pointer;
+            user-select: none;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.3);
+            transform: translateY(-50%);
         }
 
-        .close:hover {
-            color: #bbb;
+        .close { top: 20px; right: 35px; transform: none; }
+        .close:hover, .prev:hover, .next:hover { background-color: rgba(0,0,0,0.6); }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        /* Thumbnail strip */
+        .thumbnail-strip {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-bottom: 20px;
         }
+
+        .thumbnail-strip img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+        }
+
+        .thumbnail-strip img:hover { transform: scale(1.1); border-color: #4CAF50; }
+        .thumbnail-active { border-color: #4CAF50; }
     </style>
 </head>
 <body>
@@ -114,55 +141,107 @@
     </header>
 
     <div class="album-container">
-        <div class="photo-card" onclick="openLightbox(this)">
+        <div class="photo-card" onclick="openLightbox(0)">
             <img src="photos/photo1.jpg" alt="Photo 1">
             <div class="caption">Caption 1</div>
         </div>
-        <div class="photo-card" onclick="openLightbox(this)">
+        <div class="photo-card" onclick="openLightbox(1)">
             <img src="photos/photo2.jpg" alt="Photo 2">
             <div class="caption">Caption 2</div>
         </div>
-        <div class="photo-card" onclick="openLightbox(this)">
+        <div class="photo-card" onclick="openLightbox(2)">
             <img src="photos/photo3.jpg" alt="Photo 3">
             <div class="caption">Caption 3</div>
         </div>
-        <div class="photo-card" onclick="openLightbox(this)">
+        <div class="photo-card" onclick="openLightbox(3)">
             <img src="photos/photo4.jpg" alt="Photo 4">
             <div class="caption">Caption 4</div>
         </div>
-        <!-- Add more photo cards as needed -->
+        <!-- Add more photo cards here -->
     </div>
 
     <!-- Lightbox Modal -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="close">&times;</span>
+    <div id="lightbox" class="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <span class="prev" onclick="changeSlide(-1)">&#10094;</span>
+        <span class="next" onclick="changeSlide(1)">&#10095;</span>
         <img class="lightbox-content" id="lightbox-img">
         <div class="lightbox-caption" id="lightbox-caption"></div>
+        <div class="thumbnail-strip" id="thumbnail-strip"></div>
     </div>
 
     <script>
-        function openLightbox(photoCard) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxCaption = document.getElementById('lightbox-caption');
+        const photos = [
+            { src: "photos/photo1.jpg", caption: "Caption 1" },
+            { src: "photos/photo2.jpg", caption: "Caption 2" },
+            { src: "photos/photo3.jpg", caption: "Caption 3" },
+            { src: "photos/photo4.jpg", caption: "Caption 4" },
+            // Add more photos here
+        ];
 
-            const img = photoCard.querySelector('img');
-            const caption = photoCard.querySelector('.caption').innerText;
+        let currentIndex = 0;
 
-            lightbox.style.display = "block";
-            lightboxImg.src = img.src;
-            lightboxCaption.innerText = caption;
+        function openLightbox(index) {
+            currentIndex = index;
+            document.getElementById('lightbox').style.display = "block";
+            generateThumbnails();
+            showSlide(currentIndex);
         }
 
         function closeLightbox() {
             document.getElementById('lightbox').style.display = "none";
         }
 
-        // Close when clicking on "x"
-        document.querySelector('.close').onclick = function(event) {
-            event.stopPropagation(); // Prevent triggering parent click
-            closeLightbox();
+        function changeSlide(n) {
+            currentIndex += n;
+            if(currentIndex < 0) currentIndex = photos.length - 1;
+            if(currentIndex >= photos.length) currentIndex = 0;
+            showSlide(currentIndex);
         }
+
+        function showSlide(index) {
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+
+            lightboxImg.classList.remove('show');
+            setTimeout(() => {
+                lightboxImg.src = photos[index].src;
+                lightboxCaption.innerText = photos[index].caption;
+                lightboxImg.classList.add('show');
+            }, 100);
+
+            updateActiveThumbnail();
+        }
+
+        function generateThumbnails() {
+            const strip = document.getElementById('thumbnail-strip');
+            strip.innerHTML = "";
+            photos.forEach((photo, idx) => {
+                const thumb = document.createElement('img');
+                thumb.src = photo.src;
+                thumb.alt = photo.caption;
+                thumb.onclick = () => { currentIndex = idx; showSlide(currentIndex); };
+                strip.appendChild(thumb);
+            });
+            updateActiveThumbnail();
+        }
+
+        function updateActiveThumbnail() {
+            const thumbs = document.querySelectorAll('#thumbnail-strip img');
+            thumbs.forEach((thumb, idx) => {
+                thumb.classList.toggle('thumbnail-active', idx === currentIndex);
+            });
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(event) {
+            const lightbox = document.getElementById('lightbox');
+            if(lightbox.style.display === "block") {
+                if(event.key === "ArrowLeft") changeSlide(-1);
+                if(event.key === "ArrowRight") changeSlide(1);
+                if(event.key === "Escape") closeLightbox();
+            }
+        });
     </script>
 </body>
 </html>
