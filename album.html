@@ -1,101 +1,187 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Photo Album — Roshan Ghimire</title>
-  <meta name="description" content="Photo album page for Roshan Ghimire — personal and professional moments captured." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Major Project: Cell Phone Based Voting Machine with Voice Acknowledgement</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"> <!-- your existing CSS file -->
-
-  <style>
-    /* Additional styles specific for album */
-    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px;}
-    .photo-card{background:rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s ease}
-    .photo-card:hover{transform:scale(1.03)}
-    .photo-card img{width:100%;height:180px;object-fit:cover;display:block}
-    @media(max-width:768px){.photo-card img{height:160px}}
-
-    /* Lightbox */
-    .lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;z-index:100;}
-    .lightbox img{max-width:90%;max-height:90%;border-radius:12px;}
-    .lightbox.active{display:flex}
-    .close-btn{position:absolute;top:20px;right:30px;font-size:32px;color:white;cursor:pointer;}
-  </style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #388E3C;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            animation: fadeIn 2s;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: justify;
+        }
+        h2, h3 {
+            color: #4CAF50;
+            text-align: center;
+            animation: fadeIn 2s;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        p, ul {
+            animation: fadeIn 2s;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .project-photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .project-photo {
+            margin: 10px;
+        }
+        .member-photos {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .member-photo {
+            margin: 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .member-photo img {
+            width: 100%;
+            height: auto;
+        }
+        .member-photo p {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 5px;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .member-photo:hover p {
+            opacity: 1;
+        }
+        .member-photo:hover, .project-photo:hover {
+            transform: scale(1.05);
+        }
+        h2:hover, h3:hover {
+            color: #FF5733;
+            transform: scale(1.1);
+        }
+        p:hover, ul:hover {
+            color: #FF5733;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <img src="/assets/profile.jpg" alt="Roshan Ghimire portrait" loading="lazy">
-        <div>
-          <div style="font-weight:700">Roshan Ghimire</div>
-          <div style="font-size:13px;color:#94a3b8">IT & Public Health</div>
+
+<header>
+    <h1>Major Project: Cell Phone Based Voting Machine with Voice Acknowledgement</h1>
+</header>
+
+<main>
+    <h2>About the Project</h2>
+    <p>
+        The project aimed to develop a cell phone-based voting machine with voice acknowledgment. It allowed users to cast votes via phone call using Dual-Tone Multi-Frequency (DTMF) tones. The system could receive calls and gather votes from callers, attributing them to specific candidates or choices. Votes were then counted and stored in the Electrically Erasable Programmable Read-Only Memory (EEPROM).
+    </p>
+
+    <h2>Project Components</h2>
+    <ul>
+        <li>PIC16F877A microcontroller</li>
+        <li>APR voice module</li>
+        <li>MT8870 DTMF decoder</li>
+        <li>EEPROM</li>
+    </ul>
+
+    <h2>Project Features</h2>
+    <ul>
+        <li>Voting Through Phone Calls</li>
+        <li>Voice Acknowledgment</li>
+        <li>DTMF Tone Recognition</li>
+        <li>Vote Counting and Storage</li>
+    </ul>
+
+    <h2>Project Team</h2>
+    <div class="member-photos">
+        <div class="member-photo">
+            <img src="img/bg-icon.png" alt="Member 1 Photo">
+            <p>Kobid Karki</p>
         </div>
-      </div>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="album.html" class="active">Photo Album</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+        <div class="member-photo">
+            <img src="img/bg-icon.png" alt="Member 2 Photo">
+            <p>Lizana Khadka</p>
+        </div>
+        <div class="member-photo">
+            <img src="img/bg-icon.png" alt="Member 3 Photo">
+            <p>Rashmi Paudel</p>
+        </div>
+        <div class="member-photo">
+            <img src="img/bg-icon.png" alt="Member 4 Photo">
+            <p>Roshan Ghimire</p>
+        </div>
     </div>
-  </header>
 
-  <!-- Main Body (Photo Album) -->
-  <main class="container">
-    <h1>Photo Album</h1>
-    <p class="lead">A collection of my memorable moments, professional highlights, and personal experiences.</p>
+    <h2>Photos</h2>
+    <div class="project-photos">
+        <div class="project-photo">
+            <img src="img/project-2.jpg" alt="Project Photo 1">
+        </div>
+    </div>
+</main>
 
-    <section class="gallery" aria-label="Photo gallery">
-      <div class="photo-card"><img src="/assets/photos/photo1.jpg" alt="Project workshop" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo2.jpg" alt="Team collaboration" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo3.jpg" alt="Public health conference" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo4.jpg" alt="IT training session" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo5.jpg" alt="Outdoor event" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo6.jpg" alt="Graduation ceremony" loading="lazy"></div>
-    </section>
-  </main>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <span class="close-btn" id="closeBtn">&times;</span>
-    <img src="" alt="Expanded view" id="lightboxImg">
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 Roshan Ghimire — All rights reserved. <a href="index.html">Back to home</a></p>
-  </footer>
-
-  <!-- Lightbox Script -->
-  <script>
-    const galleryImages = document.querySelectorAll('.photo-card img');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const closeBtn = document.getElementById('closeBtn');
-
-    galleryImages.forEach(img => {
-      img.addEventListener('click', () => {
-        lightbox.classList.add('active');
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-      });
-    });
-
-    closeBtn.addEventListener('click', () => {
-      lightbox.classList.remove('active');
-      lightboxImg.src = '';
-    });
-
-    lightbox.addEventListener('click', (e) => {
-      if(e.target === lightbox) {
-        lightbox.classList.remove('active');
-        lightboxImg.src = '';
-      }
-    });
-  </script>
 </body>
 </html>
