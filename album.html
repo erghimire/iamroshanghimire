@@ -1,114 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Photo Album — Roshan Ghimire</title>
-  <meta name="description" content="Photo album page for Roshan Ghimire — personal and professional moments captured." />
+<main class="container">
+  <h1>Photo Album</h1>
+  <p class="lead">A collection of my memorable moments, professional highlights, and personal experiences.</p>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#06b6d4; --radius:14px;
-      --max-width:1100px; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
-    html,body{margin:0;background:linear-gradient(180deg,#071025 0%, #0e1b2b 100%);color:#e6eef6;min-height:100vh;}
-    a{color:var(--accent);text-decoration:none}
-    header{background:rgba(255,255,255,0.02);backdrop-filter:blur(4px);position:sticky;top:0;z-index:40;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .container{max-width:var(--max-width);margin:0 auto;padding:28px}
-    .nav{display:flex;gap:18px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:12px;align-items:center}
-    .brand img{width:46px;height:46px;border-radius:10px;object-fit:cover}
-    nav a{padding:8px 10px;border-radius:8px;font-weight:600}
-    nav a.active{color:var(--accent);border-bottom:2px solid var(--accent)}
-    nav a:focus{outline:3px solid rgba(6,182,212,0.18)}
+  <section class="gallery" aria-label="Photo gallery">
+    <div class="photo-card"><img src="/assets/photos/photo1.jpg" alt="Project workshop" loading="lazy"></div>
+    <div class="photo-card"><img src="/assets/photos/photo2.jpg" alt="Team collaboration" loading="lazy"></div>
+    <div class="photo-card"><img src="/assets/photos/photo3.jpg" alt="Public health conference" loading="lazy"></div>
+    <div class="photo-card"><img src="/assets/photos/photo4.jpg" alt="IT training session" loading="lazy"></div>
+    <div class="photo-card"><img src="/assets/photos/photo5.jpg" alt="Outdoor event" loading="lazy"></div>
+    <div class="photo-card"><img src="/assets/photos/photo6.jpg" alt="Graduation ceremony" loading="lazy"></div>
+  </section>
+</main>
 
-    h1{font-size:28px;margin:30px 0 16px;text-align:center}
-    p.lead{text-align:center;color:var(--muted);margin-bottom:32px}
+<div class="lightbox" id="lightbox">
+  <span class="close-btn" id="closeBtn">&times;</span>
+  <img src="" alt="Expanded view" id="lightboxImg">
+</div>
 
-    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
-    .photo-card{background:rgba(255,255,255,0.04);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s ease}
-    .photo-card:hover{transform:scale(1.03)}
-    .photo-card img{width:100%;height:180px;object-fit:cover;display:block}
+<script>
+  const galleryImages = document.querySelectorAll('.photo-card img');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const closeBtn = document.getElementById('closeBtn');
 
-    /* Lightbox */
-    .lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;z-index:100;}
-    .lightbox img{max-width:90%;max-height:90%;border-radius:12px;}
-    .lightbox.active{display:flex}
-
-    .close-btn{position:absolute;top:20px;right:30px;font-size:32px;color:white;cursor:pointer;}
-
-    footer{padding:28px 0;text-align:center;color:var(--muted);font-size:14px}
-    @media(max-width:768px){.photo-card img{height:160px}}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <img src="/assets/profile.jpg" alt="Roshan Ghimire portrait" loading="lazy">
-        <div>
-          <div style="font-weight:700">Roshan Ghimire</div>
-          <div style="font-size:13px;color:var(--muted)">IT & Public Health</div>
-        </div>
-      </div>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="album.html" class="active">Photo Album</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <h1>Photo Album</h1>
-    <p class="lead">A collection of my memorable moments, professional highlights, and personal experiences.</p>
-
-    <section class="gallery" aria-label="Photo gallery">
-      <div class="photo-card"><img src="/assets/photos/photo1.jpg" alt="Project workshop" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo2.jpg" alt="Team collaboration" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo3.jpg" alt="Public health conference" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo4.jpg" alt="IT training session" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo5.jpg" alt="Outdoor event" loading="lazy"></div>
-      <div class="photo-card"><img src="/assets/photos/photo6.jpg" alt="Graduation ceremony" loading="lazy"></div>
-    </section>
-  </main>
-
-  <div class="lightbox" id="lightbox">
-    <span class="close-btn" id="closeBtn">&times;</span>
-    <img src="" alt="Expanded view" id="lightboxImg">
-  </div>
-
-  <footer>
-    <p>© 2025 Roshan Ghimire — All rights reserved. <a href="index.html">Back to home</a></p>
-  </footer>
-
-  <script>
-    const galleryImages = document.querySelectorAll('.photo-card img');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const closeBtn = document.getElementById('closeBtn');
-
-    galleryImages.forEach(img => {
-      img.addEventListener('click', () => {
-        lightbox.classList.add('active');
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-      });
+  galleryImages.forEach(img => {
+    img.addEventListener('click', () => {
+      lightbox.classList.add('active');
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
     });
+  });
 
-    closeBtn.addEventListener('click', () => {
+  closeBtn.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+    lightboxImg.src = '';
+  });
+
+  lightbox.addEventListener('click', (e) => {
+    if(e.target === lightbox) {
       lightbox.classList.remove('active');
       lightboxImg.src = '';
-    });
-
-    lightbox.addEventListener('click', (e) => {
-      if(e.target === lightbox) {
-        lightbox.classList.remove('active');
-        lightboxImg.src = '';
-      }
-    });
-  </script>
-</body>
-</html>
+    }
+  });
+</script>
