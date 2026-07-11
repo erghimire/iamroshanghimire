@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cell Phone Based Voting Machine with Voice Acknowledgement</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #388E3C;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            animation: fadeIn 2s;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: justify;
+        }
+        h2, h3 {
+            color: #4CAF50;
+            text-align: center;
+            animation: fadeIn 2s;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        p, ul {
+            animation: fadeIn 2s;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .project-photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .project-photo {
+            margin: 10px;
+        }
+        .member-photos {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .member-photo {
+            margin: 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .member-photo img {
+            width: 100%;
+            height: auto;
+        }
+        .member-photo p {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 5px;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .member-photo:hover p {
+            opacity: 1;
+        }
+        .member-photo:hover, .project-photo:hover {
+            transform: scale(1.05);
+        }
+        h2:hover, h3:hover {
+            color: #FF5733;
+            transform: scale(1.1);
+        }
+        p:hover, ul:hover {
+            color: #FF5733;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Cell Phone Based Voting Machine with Voice Acknowledgement</h1>
+</header>
+<main>
+    <h2>About the Project</h2>
+    <p>
+        The project aimed to develop a cell phone-based voting machine with voice acknowledgment. It allowed users to cast votes via phone call using Dual-Tone Multi-Frequency (DTMF) tones. The system could receive calls and gather votes from callers, attributing them to specific candidates or choices. Votes were then counted and stored in the Electrically Erasable Programmable Read-Only Memory (EEPROM).
+    </p>
+
+    <h2>Project Components</h2>
+    <ul>
+        <li>PIC16F877A microcontroller</li>
+        <li>APR voice module</li>
+        <li>MT8870 DTMF decoder</li>
+        <li>EEPROM</li>
+    </ul>
+
+    <h2>Project Features</h2>
+    <ul>
+        <li>Voting Through Phone Calls</li>
+        <li>Voice Acknowledgment</li>
+        <li>DTMF Tone Recognition</li>
+        <li>Vote Counting and Storage</li>
+    </ul>
+
+    <h2>Project Team</h2>
+    <div class="member-photos">
+        <div class="member-photo">
+            <img src="img/member/kobid.jpg" alt="Kobid Karki">
+            <p>Kobid Karki</p>
+        </div>
+        <div class="member-photo">
+            <img src="img/member/lizana.jpg" alt="Lizana Khadka">
+            <p>Lizana Khadka</p>
+        </div>
+        <div class="member-photo">
+            <img src="img/member/rashmi.jpg" alt="Rashmi Paudel">
+            <p>Rashmi Paudel</p>
+        </div>
+        <div class="member-photo">
+            <img src="img/member/roshan.jpg" alt="Roshan Ghimire">
+            <p>Roshan Ghimire</p>
+        </div>
+    </div>
+
+    <h2>Photos</h2>
+    <div class="project-photos">
+        <div class="project-photo">
+            <img src="img/project-2.jpg" alt="Project Photo 1">
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
+
+
+
