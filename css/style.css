@@ -466,6 +466,7 @@
         width: 260px;
     }
 }
+
 /* Professional Gallery Photo Box Styling & Perfect Fit */
 .gallery-img-wrapper {
     position: relative;
@@ -473,27 +474,28 @@
     border-radius: 16px;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
     border: 3px solid #ffffff;
-    background-color: #f8fafc; /* Clean background frame for images with different ratios */
+    background-color: #f1f5f9; /* Soft background fill for framing */
     cursor: pointer;
-    height: 220px; /* Fixed uniform height for all boxes */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    height: 240px; /* Locked explicit box height */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .about-gallery-img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 100% !important;
+    max-height: 100% !important;
     width: auto !important;
     height: auto !important;
-    object-fit: contain; /* Ensures the whole image stays completely visible inside the box */
-    object-position: center center;
+    object-fit: contain !important; /* Forces the entire uncropped image to fit inside */
+    object-position: center center !important;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    display: block;
+    display: block !important;
 }
 
 .gallery-img-wrapper:hover .about-gallery-img {
-    transform: scale(1.06); /* Smooth gentle zoom on hover */
+    transform: scale(1.05); /* Smooth gentle zoom on hover */
 }
 
 .gallery-zoom-overlay {
