@@ -484,31 +484,37 @@
                 width: 260px;
             }
         }
-/* Professional Gallery Photo Box Styling & Zoom Effect */
+/* Professional Gallery Photo Box Styling & Full Image Fit */
         .gallery-img-wrapper {
             position: relative;
             overflow: hidden;
             border-radius: 16px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
             border: 3px solid #ffffff;
+            background-color: #f1f5f9; /* Adds a clean background frame for images with different aspect ratios */
             cursor: pointer;
             display: block;
+            height: 220px; /* Uniform box height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .about-gallery-img {
-            height: 220px;
-            width: 100%;
-            object-fit: cover; /* Keeps image neatly cropped and filled inside the box */
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* Ensures the entire image fits inside without cropping any edges */
             object-position: center;
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .gallery-img-wrapper:hover .about-gallery-img {
-            transform: scale(1.1);
+            transform: scale(1.06); /* Smooth gentle zoom on hover */
         }
         .gallery-zoom-overlay {
             position: absolute;
             inset: 0;
             background: rgba(13, 110, 253, 0.4);
-            border-radius: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
