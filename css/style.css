@@ -485,3 +485,41 @@
                 height: 280px;
             }
         }
+/* Professional Gallery Photo Box Styling & Zoom Effect */
+        .gallery-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            border: 3px solid #ffffff;
+            cursor: pointer;
+            display: block;
+        }
+        .about-gallery-img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover; /* Keeps image neatly cropped and filled inside the box */
+            object-position: center;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gallery-img-wrapper:hover .about-gallery-img {
+            transform: scale(1.1);
+        }
+        .gallery-zoom-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(13, 110, 253, 0.4);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .gallery-zoom-overlay i {
+            color: #ffffff;
+            font-size: 1.75rem;
+        }
+        .gallery-img-wrapper:hover .gallery-zoom-overlay {
+            opacity: 1;
+        }
