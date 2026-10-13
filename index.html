@@ -95,54 +95,6 @@
             display: inline-block;
             margin-bottom: 1rem;
         }
-        
-        /* Executive Profile Image Styling with Smooth Zoom on Hover */
-        .profile-img-container {
-            position: relative;
-            display: inline-block;
-            padding: 8px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            box-shadow: 0 20px 40px -15px rgba(13, 110, 253, 0.3);
-            overflow: hidden;
-        }
-        .profile-img-container img {
-            width: 380px;
-            height: 380px;
-            object-fit: cover;
-            object-position: center top;
-            border-radius: 50%;
-            border: 6px solid #ffffff;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .profile-img-container:hover img {
-            transform: scale(1.12); /* Enlarges picture smoothly on mouse hover */
-        }
-
-        /* Responsive Gallery Photo Zoom Hover Enhancements */
-        .gallery-img-wrapper {
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-            border: 3px solid #ffffff;
-        }
-        .about-gallery-img {
-            height: 220px;
-            width: 100%;
-            object-fit: cover;
-            object-position: center;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .gallery-img-wrapper:hover .about-gallery-img {
-            transform: scale(1.1); /* Zooms gallery photo big on hover */
-        }
-
-        @media (max-width: 991.98px) {
-            .profile-img-container img {
-                width: 280px;
-                height: 280px;
-            }
-        }
     </style>
 </head>
 
@@ -196,13 +148,13 @@
                     <div class="d-flex align-items-center pt-5">
                         <a href="https://drive.google.com/file/d/1Z7Vc-1TQMODtA3Kh8a4V-wODoya0O7IK/view" target="_blank" class="btn btn-primary py-3 px-4 me-4 rounded-pill fw-semibold"><i class="fa fa-download me-2"></i>Download Resume</a>
                         <button type="button" class="btn-play shadow-sm" data-bs-toggle="modal"
-                            data-src="url?id=5embed/W3evksgFMt0?si=mCIJJN9pF9BRkEJu&amp" autoplay; data-bs-target="#videoModal">
+                            data-src="https://github.com/pullsembed/W3evksgFMt0?si=mCIJJN9pF9BRkEJu&amp" autoplay; data-bs-target="#videoModal">
                             <span></span>
                         </button>
                         <h5 class="ms-3 mb-0 d-none d-sm-block text-dark fw-medium fs-6"><i class="fa fa-play-circle text-primary me-1"></i>Play Video</h5>
                     </div>
                 </div>
-<div class="col-lg-6 text-center">
+                <div class="col-lg-6 text-center">
                     <a href="img/profile.png" data-lightbox="profile-lightbox" data-title="Roshan Ghimire - Professional Portfolio" class="profile-img-container wow zoomIn d-inline-block" data-wow-delay="0.1s" title="Click to view full size">
                         <img src="img/profile.png" alt="Roshan Ghimire">
                         <div class="profile-zoom-overlay">
@@ -258,36 +210,36 @@
                     </div>
                     <a class="btn btn-primary py-3 px-5 mt-2 rounded-pill shadow-sm" href="https://roshanghimire.info.np/#skill"><i class="fa fa-arrow-right me-2"></i>More</a>
                 </div>
-<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-    <div class="row g-3 mb-3">
-        <div class="col-sm-6">
-            <a href="photo/1.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 1" class="gallery-img-wrapper">
-                <img class="about-gallery-img" src="photo/1.JPG" alt="Photo 1">
-                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
-            </a>
-        </div>
-        <div class="col-sm-6">
-            <a href="photo/2.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 2" class="gallery-img-wrapper">
-                <img class="about-gallery-img" src="photo/2.JPG" alt="Photo 2">
-                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
-            </a>
-        </div>
-    </div>
-    <div class="row g-3">
-        <div class="col-sm-6">
-            <a href="photo/3.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 3" class="gallery-img-wrapper">
-                <img class="about-gallery-img" src="photo/3.JPG" alt="Photo 3">
-                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
-            </a>
-        </div>
-        <div class="col-sm-6">
-            <a href="photo/4.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 4" class="gallery-img-wrapper">
-                <img class="about-gallery-img" src="photo/4.JPG" alt="Photo 4">
-                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
-            </a>
-        </div>
-    </div>
-</div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <a href="photo/1.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 1" class="gallery-img-wrapper">
+                                <img class="about-gallery-img" src="photo/1.JPG" alt="Photo 1">
+                                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="photo/2.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 2" class="gallery-img-wrapper">
+                                <img class="about-gallery-img" src="photo/2.JPG" alt="Photo 2">
+                                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <a href="photo/3.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 3" class="gallery-img-wrapper">
+                                <img class="about-gallery-img" src="photo/3.JPG" alt="Photo 3">
+                                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="photo/4.JPG" data-lightbox="about-gallery" data-title="Roshan Ghimire - Gallery Photo 4" class="gallery-img-wrapper">
+                                <img class="about-gallery-img" src="photo/4.JPG" alt="Photo 4">
+                                <div class="gallery-zoom-overlay"><i class="fa fa-search-plus"></i></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -605,7 +557,7 @@
                         <div class="d-flex pt-2 mb-4">
                             <a class="btn btn-square btn-primary me-2 rounded-circle shadow-sm" href="https://www.facebook.com/iamroshanghimire" target="_blank"><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-square btn-primary me-2 rounded-circle shadow-sm" href="https://www.youtube.com/@iamRoshanGhimiree" target="_blank"><i class="fab fa-youtube"></i></a>
-                            <a class="btn btn-square btn-primary me-2 rounded-circle shadow-sm" href="url?id=7in/iamroshanghimire/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-square btn-primary me-2 rounded-circle shadow-sm" href="https://github.com/notificationsin/iamroshanghimire/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
