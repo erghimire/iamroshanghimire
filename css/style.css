@@ -538,3 +538,67 @@
 .gallery-img-wrapper:hover .gallery-zoom-overlay {
     opacity: 1;
 }
+
+/* Smooth Stylish Organic Profile Image Styling */
+.profile-img-container {
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, #6244C5 0%, #0dcaf0 100%) !important;
+    padding: 6px !important; /* Creates a smooth gradient border frame */
+    box-shadow: 0 20px 40px -15px rgba(98, 68, 197, 0.3) !important;
+    /* Organic smooth rounded shape */
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70% !important;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.profile-img-container:hover {
+    border-radius: 50% 50% 50% 50% / 50% 50% 50% 50% !important; /* Transforms into a smooth soft card on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px -12px rgba(98, 68, 197, 0.4) !important;
+}
+
+.profile-img-container img {
+    width: 340px !important;
+    height: auto !important;
+    max-height: 460px !important;
+    object-fit: contain !important; /* Keeps the full image uncropped */
+    border-radius: 26% 64% 64% 36% / 26% 26% 64% 64% !important;
+    border: none !important;
+    display: block;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.profile-img-container:hover img {
+    border-radius: 46% 46% 46% 46% / 46% 46% 46% 46% !important;
+    transform: scale(1.04);
+}
+
+/* Smooth zoom overlay on hover */
+.profile-zoom-overlay {
+    position: absolute;
+    inset: 6px;
+    background: rgba(98, 68, 197, 0.45);
+    border-radius: 26% 64% 64% 36% / 26% 26% 64% 64% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-zoom-overlay i {
+    color: #ffffff;
+    font-size: 2rem;
+}
+
+.profile-img-container:hover .profile-zoom-overlay {
+    opacity: 1;
+}
+
+@media (max-width: 991.98px) {
+    .profile-img-container img {
+        width: 260px !important;
+    }
+}
