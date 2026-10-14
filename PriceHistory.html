@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Alert App - Price History Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Chart.js for graphics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 p-6 rounded-2xl border border-slate-800 shadow-2xl gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-emerald-600/20 p-3 rounded-xl border border-emerald-500/30">
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Share Alert App — Price History</h1>
+                    <p class="text-xs md:text-sm text-slate-400 mt-0.5">Select a specific date to inspect stock valuations</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button id="refreshBtn" onclick="loadSheetData()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20 cursor-pointer active:scale-95 whitespace-nowrap">
+                    <svg id="refreshIcon" class="w-4 h-4 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Refresh Data
+                </button>
+            </div>
+        </header>
+
+        <!-- Chart & Summary Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-slate-900/80 backdrop-blur border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-200">Top 10 Peak Prices (Active Date View)</h2>
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-medium">Market Analytics</span>
+                </div>
+                <div class="relative h-64 w-full">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-900 to-emerald-950 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-200 mb-2">Selection Overview</h2>
+                    <p class="text-xs text-slate-400 mb-6">Metrics reflecting your chosen date row.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Active Tickers Tracked</span>
+                        <span id="trackedCount" class="text-xl font-bold text-emerald-400 font-mono">21</span>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Feed Status</span>
+                        <span class="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Stream
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Table Section with Date Picker on Top -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="p-4 md:p-5 bg-slate-800/40 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="text-sm font-semibold text-slate-200">Select Date to View Prices:</span>
+                </div>
+
+                <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 shadow-inner">
+                    <select id="dateSelect" onchange="displaySelectedDateData()" class="bg-transparent text-sm text-white focus:outline-none cursor-pointer font-mono">
+                        <option value="" class="bg-slate-900">-- Select a Date --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="dataTable" class="w-full text-left border-collapse">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-800/60 text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="text-center text-xs text-slate-500 pb-6">
+            Share Alert App &bull; Price History Module
+        </footer>
+    </div>
+
+    <script>
+        // REPLACE THIS URL with your published CSV link for the "Price History" tab
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1871836325&single=true&output=csv';
+
+        let allRawData = [];
+        let tableColumns = [];
+        let priceChartInstance = null;
+
+        function loadSheetData() {
+            if(!SHEET_CSV_URL.includes('http')) {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="py-8 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Price History tab inside the script tag.</td></tr>`;
+                return;
+            }
+
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('animate-spin');
+
+            Papa.parse(SHEET_CSV_URL, {
+                download: true,
+                beforeFirstChunk: function(chunk) {
+                    let lines = chunk.split(/\r\n|\n/);
+                    while (lines.length > 0 && (!lines[0].includes('S.N') && !lines[0].includes('Date'))) {
+                        lines.shift();
+                    }
+                    return lines.join('\n');
+                },
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    allRawData = results.data.filter(row => {
+                        const val = row['S.N'] || row[Object.keys(row)[0]] || '';
+                        return val !== '' && !isNaN(val);
+                    });
+
+                    if (results.meta && results.meta.fields) {
+                        tableColumns = results.meta.fields;
+                    }
+
+                    fillWeekendPrices(allRawData, tableColumns);
+                    populateDateDropdown();
+                    renderTableHeaders();
+                    
+                    if (allRawData.length > 0) {
+                        document.getElementById('dateSelect').value = allRawData[0]['Date'] || '';
+                        displaySelectedDateData();
+                    }
+
+                    setTimeout(() => icon.classList.remove('animate-spin'), 500);
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                    icon.classList.remove('animate-spin');
+                }
+            });
+        }
+
+        function fillWeekendPrices(data, columns) {
+            let lastValidValues = {};
+            data.forEach(row => {
+                columns.forEach((col, idx) => {
+                    if (idx < 2) return;
+                    let val = row[col];
+                    if (val && val !== 'Weekend' && val !== '-' && val.trim() !== '') {
+                        lastValidValues[col] = val;
+                    } else if (val === 'Weekend' && lastValidValues[col]) {
+                        row[col] = lastValidValues[col];
+                    }
+                });
+            });
+        }
+
+        function populateDateDropdown() {
+            const select = document.getElementById('dateSelect');
+            select.innerHTML = '';
+            allRawData.forEach(row => {
+                const dateVal = row['Date'] || row[tableColumns[1]];
+                if (dateVal) {
+                    const opt = document.createElement('option');
+                    opt.value = dateVal;
+                    opt.textContent = dateVal;
+                    opt.className = 'bg-slate-900';
+                    select.appendChild(opt);
+                }
+            });
+        }
+
+        function renderTableHeaders() {
+            const thead = document.getElementById('tableHeader');
+            if (tableColumns.length === 0) return;
+            
+            let html = '<tr class="bg-slate-800/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">';
+            tableColumns.forEach((col) => {
+                html += `<th class="py-4 px-4 text-slate-300 font-semibold">${col || 'Col'}</th>`;
+            });
+            html += '</tr>';
+            thead.innerHTML = html;
+        }
+
+        function displaySelectedDateData() {
+            const selectedDate = document.getElementById('dateSelect').value;
+            const targetRow = allRawData.find(row => (row['Date'] || row[tableColumns[1]]) === selectedDate);
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (!targetRow) {
+                tbody.innerHTML = `<tr><td colspan="15" class="py-8 text-center text-slate-400">No data found for this date.</td></tr>`;
+                return;
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = 'bg-slate-900/60';
+            
+            let rowHtml = '';
+            tableColumns.forEach((col, idx) => {
+                let val = targetRow[col] || '-';
+                let isPrice = idx >= 2 && (val.startsWith('\$') || (!isNaN(parseFloat(val)) && val.includes('.')));
+                
+                let cellClass = "py-4 px-4 text-slate-300";
+                if (isPrice) cellClass = "py-4 px-4 text-emerald-400 font-mono font-bold text-base";
+
+                rowHtml += `<td class="${cellClass}">${val}</td>`;
+            });
+            tr.innerHTML = rowHtml;
+            tbody.appendChild(tr);
+
+            updateChart([targetRow]);
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            let stockPrices = [];
+
+            if (data.length > 0) {
+                const row = data[0];
+                Object.keys(row).forEach((key, idx) => {
+                    if (idx >= 2) {
+                        const val = row[key];
+                        if (val && typeof val === 'string' && val !== '-' && val !== 'Weekend') {
+                            const num = parseFloat(val.replace(/[^0-9.-]+/g,""));
+                            if (!isNaN(num) && num > 0) {
+                                stockPrices.push({ ticker: key, price: num });
+                            }
+                        }
+                    }
+                });
+            }
+
+            stockPrices.sort((a, b) => b.price - a.price);
+            const top10 = stockPrices.slice(0, 10);
+
+            const labels = top10.map(item => item.ticker);
+            const prices = top10.map(item => item.price);
+
+            if (priceChartInstance) {
+                priceChartInstance.destroy();
+            }
+
+            priceChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Price (\$)',
+                        data: prices,
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        // Initial Load
+        loadSheetData();
+    </script>
+</body>
+</html>

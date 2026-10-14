@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Alert App - Professional Fund Analytics</title>
+    <!-- Tailwind CSS with professional font styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Chart.js for advanced graphics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950 p-6 md:p-8 rounded-3xl border border-slate-800/80 shadow-2xl gap-6">
+            <div class="flex items-center gap-5">
+                <div class="bg-emerald-500/10 p-4 rounded-2xl border border-emerald-500/20 shadow-inner">
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Fund History & Cashflow</h1>
+                    <p class="text-xs md:text-sm text-slate-400 mt-1">Live analytics synced automatically from your <a href="https://docs.google.com/spreadsheets/d/1Bf-dTSVGahobo6dsb7zRaquIZYmEAE-I0OiYoDOvqRA/edit?gid=1954485553#gid=1954485553" target="_blank" class="text-emerald-400 hover:underline">Share Alert App</a> sheet</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <button id="refreshBtn" onclick="loadSheetData()" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20 cursor-pointer active:scale-95 w-full md:w-auto">
+                    <svg id="refreshIcon" class="w-4 h-4 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh Sync
+                </button>
+            </div>
+        </header>
+
+        <!-- Summary Metric Cards & Advanced Chart Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Total Cards -->
+            <div class="space-y-6 flex flex-col justify-between">
+                <div class="bg-gradient-to-br from-slate-900 to-emerald-950/30 border border-slate-800/80 p-6 rounded-3xl shadow-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Deposits</p>
+                        <h3 id="totalDepositVal" class="text-2xl md:text-3xl font-extrabold text-emerald-400 font-mono mt-1">\$0.00</h3>
+                    </div>
+                    <div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 text-emerald-400 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-slate-900 to-rose-950/30 border border-slate-800/80 p-6 rounded-3xl shadow-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Withdrawals</p>
+                        <h3 id="totalWithdrawVal" class="text-2xl md:text-3xl font-extrabold text-rose-400 font-mono mt-1">\$0.00</h3>
+                    </div>
+                    <div class="bg-rose-500/10 p-3 rounded-2xl border border-rose-500/20 text-rose-400 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Advanced Chart -->
+            <div class="lg:col-span-2 bg-slate-900/90 backdrop-blur border border-slate-800/80 p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-slate-200">Cashflow Distribution Analytics</h2>
+                    <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-medium">Live Ratio</span>
+                </div>
+                <div class="relative h-48 w-full">
+                    <canvas id="cashflowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden">
+            <div class="p-6 bg-slate-800/40 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-200">Transaction History Log</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Detailed records sourced directly from the Deposite History tab</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-medium text-emerald-400">Live Synchronized</span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="dataTable" class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800/80 font-semibold">
+                            <th class="py-4 px-6">Deposit Date</th>
+                            <th class="py-4 px-6 text-right">Deposit Amount (AUD)</th>
+                            <th class="py-4 px-6 border-l border-slate-800/80">Withdraw Date</th>
+                            <th class="py-4 px-6 text-right">Withdraw Amount (AUD)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-800/50 text-sm">
+                        <!-- Populated Dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="text-center text-xs text-slate-500 pb-6">
+            Share Alert App &bull; Professional Financial Dashboard Module
+        </footer>
+    </div>
+
+    <script>
+        // REPLACE THIS URL with your published CSV link for the "Deposite History" tab
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1954485553&single=true&output=csv';
+
+        let chartInstance = null;
+
+        function loadSheetData() {
+            if(!SHEET_CSV_URL.includes('http')) {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="py-12 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Deposite History tab inside the script tag.</td></tr>`;
+                return;
+            }
+
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('animate-spin');
+
+            Papa.parse(SHEET_CSV_URL, {
+                download: true,
+                beforeFirstChunk: function(chunk) {
+                    let lines = chunk.split(/\r\n|\n/);
+                    while (lines.length > 0 && !lines[0].includes('Date') && !lines[0].includes('Deposite')) {
+                        lines.shift();
+                    }
+                    return lines.join('\n');
+                },
+                header: false,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processRows(results.data);
+                    setTimeout(() => icon.classList.remove('animate-spin'), 500);
+                },
+                error: function(err) {
+                    console.error('Error fetching sheet data:', err);
+                    icon.classList.remove('animate-spin');
+                }
+            });
+        }
+
+        function processRows(rows) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            let totalDepositNum = 0;
+            let totalWithdrawNum = 0;
+            let formattedTotalDeposit = '\$0.00';
+            let formattedTotalWithdraw = '\$0.00';
+            let tableRowsHtml = '';
+
+            for (let i = 2; i < rows.length; i++) {
+                const cols = rows[i];
+                const depDate = cols[0] || '';
+                const depAmt = cols[1] || '';
+                const witDate = cols[2] || '';
+                const witAmt = cols[3] || '';
+
+                if (!depDate && !depAmt && !witDate && !witAmt) continue;
+
+                if (depDate.toLowerCase().includes('total')) {
+                    if (depAmt) formattedTotalDeposit = depAmt;
+                    if (witAmt) formattedTotalWithdraw = witAmt;
+                    continue;
+                }
+
+                const cleanDepNum = parseFloat((depAmt || '').replace(/[^0-9.-]+/g,"")) || 0;
+                const cleanWitNum = parseFloat((witAmt || '').replace(/[^0-9.-]+/g,"")) || 0;
+
+                totalDepositNum += cleanDepNum;
+                totalWithdrawNum += cleanWitNum;
+
+                tableRowsHtml += `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <td class="py-4 px-6 text-slate-300 font-medium">${depDate}</td>
+                        <td class="py-4 px-6 text-right font-mono text-emerald-400 font-semibold">${depAmt ? depAmt : '-'}</td>
+                        <td class="py-4 px-6 text-slate-300 font-medium border-l border-slate-800/60">${witDate}</td>
+                        <td class="py-4 px-6 text-right font-mono text-rose-400 font-semibold">${witAmt ? witAmt : '-'}</td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = tableRowsHtml || `<tr><td colspan="4" class="py-12 text-center text-slate-400">No transaction records found.</td></tr>`;
+
+            document.getElementById('totalDepositVal').innerText = formattedTotalDeposit !== '\$0.00' ? formattedTotalDeposit : `$${totalDepositNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('totalWithdrawVal').innerText = formattedTotalWithdraw !== '\$0.00' ? formattedTotalWithdraw : `$${totalWithdrawNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+
+            updateChart(totalDepositNum, totalWithdrawNum);
+        }
+
+        function updateChart(deposits, withdrawals) {
+            const ctx = document.getElementById('cashflowChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Total Deposits', 'Total Withdrawals'],
+                    datasets: [{
+                        data: [deposits, withdrawals],
+                        backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(244, 63, 94, 0.8)'],
+                        borderColor: ['rgba(16, 185, 129, 1)', 'rgba(244, 63, 94, 1)'],
+                        borderWidth: 2,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 } }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Initial Load
+        loadSheetData();
+    </script>
+</body>
+</html>
