@@ -616,3 +616,16 @@ iframe {
 .nav-item, .dropdown {
     position: relative; /* Crucial: This anchors the absolute child inside it */
 }
+/* The dropdown/sub-menu box */
+.dropdown-menu, .sub-menu {
+    position: absolute;
+    top: 100%; /* Pushes it right below the parent button */
+    left: 0;   /* Aligns it to the left edge of the button */
+    z-index: 1000; /* Keeps it on top of other elements like maps or images */
+    display: none; /* Hidden by default until hovered or clicked */
+}
+
+/* Show it on hover or active state */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
