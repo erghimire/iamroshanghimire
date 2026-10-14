@@ -629,3 +629,23 @@ iframe {
 .dropdown:hover .dropdown-menu {
     display: block;
 }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            background: #ffffff;
+            padding: 8px 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 123, 255, 0.15);
+        }
