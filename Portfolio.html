@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard & Hub</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Header Styling */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e293b;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .ai-status-badge {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 0 rgba(52, 211, 153, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+        }
+
+        /* Main Dashboard Container */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Finance Banner with Graphic */
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border: 1px solid #4338ca;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .hero-content p {
+            color: #c7d2fe;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .hero-graphic {
+            position: relative;
+            z-index: 2;
+            width: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-graphic img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: scale(1.02);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-graphic:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+        }
+
+        /* Grid Cards Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #6366f1;
+            box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        .card.good2buy:hover::before { background: #3b82f6; }
+        .card.pricehistory:hover::before { background: #10b981; }
+        .card.deposite:hover::before { background: #f59e0b; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .good2buy .icon-box { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .pricehistory .icon-box { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .deposite .icon-box { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+        .card-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card-body p {
+            font-size: 0.92rem;
+            color: #9ca3af;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #1f2937;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .good2buy .card-footer { color: #3b82f6; }
+        .pricehistory .card-footer { color: #10b981; }
+        .deposite .card-footer { color: #f59e0b; }
+
+        .arrow-icon {
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        /* AI Feature Console Section */
+        .ai-console {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .ai-console-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ai-console-header i {
+            color: #a855f7;
+        }
+
+        .ai-console-header h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .ai-insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .ai-insight-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ai-insight-card .tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #c084fc;
+        }
+
+        .ai-insight-card p {
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        /* Footer Info */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            border-top: 1px solid #111827;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i data-lucide="layout-dashboard" style="color: white; width: 24px; height: 24px;"></i>
+            </div>
+            <div class="logo-text">
+                <h1>Wealth & Shopping Hub</h1>
+                <p>AI Financial Platform</p>
+            </div>
+        </div>
+        <div class="ai-status-badge">
+            <span class="pulse-dot"></span>
+            AI Copilot Active
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Hero Banner with Financial Stock Graphic -->
+        <div class="hero-banner">
+            <div class="hero-content">
+                <h2>Smart Financial Operations</h2>
+                <p>Monitor your purchases, analyze historical market shifts, and streamline your deposits with real-time AI automation and predictive analytics.</p>
+            </div>
+            <div class="hero-graphic">
+                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" alt="Financial Market Graph">
+            </div>
+        </div>
+
+        <h3 class="section-title">Core Applications</h3>
+
+        <!-- Grid Cards Navigation -->
+        <div class="grid">
+            <!-- Good2Buy Card -->
+            <a href="Good2Buy.html" class="card good2buy">
+                <div>
+                    <div class="card-header">
+                        <div class="icon-box">
+                            <i data-lucide="shopping-bag" style="width: 24px; height: 24px;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>Good to Buy List</h3>
+                        <p>Browse optimized product listings, review smart buying signals, and track preferred consumer goods.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Module</span>
+                    <i data-lucide="arrow-right" class="arrow-icon" style="width: 18px; height: 18px;"></i>
+                </div>
+            </a>
+
+            <!-- PriceHistory Card -->
+            <a href="PriceHistory.html" class="card pricehistory">
+                <div>
+                    <div class="card-header">
+                        <div class="icon-box">
+                            <i data-lucide="trending-up" style="width: 24px; height: 24px;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>Price History</h3>
+                        <p>Analyze market cost trends, track historical data fluctuations, and forecast future value changes.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Module</span>
+                    <i data-lucide="arrow-right" class="arrow-icon" style="width: 18px; height: 18px;"></i>
+                </div>
+            </a>
+
+            <!-- Deposite Card -->
+            <a href="deposite.html" class="card deposite">
+                <div>
+                    <div class="card-header">
+                        <div class="icon-box">
+                            <i data-lucide="wallet" style="width: 24px; height: 24px;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>Deposit and Withdraw Details</h3>
+                        <p>Manage account balances, verify secure transaction histories, and execute encrypted financial inputs.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Module</span>
+                    <i data-lucide="arrow-right" class="arrow-icon" style="width: 18px; height: 18px;"></i>
+                </div>
+            </a>
+        </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; Roshan Ghimire</p>
+    </footer>
+
+    <!-- Initialize Lucide Icons Script -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
