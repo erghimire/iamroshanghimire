@@ -99,4 +99,207 @@
     </div>
 
     <script>
-        const SHEET_CSV_
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1871836325&single=true&output=csv';
+
+        let allRawData = [];
+        let tableColumns = [];
+        let priceChartInstance = null;
+
+        function loadSheetData() {
+            if(!SHEET_CSV_URL.includes('http')) {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="py-8 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Price History tab inside the script tag.</td></tr>`;
+                return;
+            }
+
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('animate-spin');
+
+            Papa.parse(SHEET_CSV_URL, {
+                download: true,
+                beforeFirstChunk: function(chunk) {
+                    let lines = chunk.split(/\r\n|\n/);
+                    while (lines.length > 0 && (!lines[0].includes('S.N') && !lines[0].includes('Date'))) {
+                        lines.shift();
+                    }
+                    return lines.join('\n');
+                },
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    allRawData = results.data.filter(row => {
+                        const val = row['S.N'] || row[Object.keys(row)[0]] || '';
+                        return val !== '' && !isNaN(val);
+                    });
+
+                    if (results.meta && results.meta.fields) {
+                        tableColumns = results.meta.fields;
+                    }
+
+                    fillWeekendPrices(allRawData, tableColumns);
+                    renderTableHeaders();
+                    
+                    if (allRawData.length > 0) {
+                        const firstDateStr = allRawData[0]['Date'] || allRawData[0][tableColumns[1]] || '';
+                        const parsedDate = parseDateToISO(firstDateStr);
+                        if (parsedDate) {
+                            document.getElementById('datePicker').value = parsedDate;
+                        }
+                        displaySelectedMonthData();
+                    }
+
+                    setTimeout(() => icon.classList.remove('animate-spin'), 500);
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                    icon.classList.remove('animate-spin');
+                }
+            });
+        }
+
+        function parseDateToISO(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) {
+                return d.toISOString().split('T')[0];
+            }
+            return '';
+        }
+
+        function fillWeekendPrices(data, columns) {
+            let lastValidValues = {};
+            data.forEach(row => {
+                columns.forEach((col, idx) => {
+                    if (idx < 2) return;
+                    let val = row[col];
+                    if (val && val !== 'Weekend' && val !== '-' && val.trim() !== '') {
+                        lastValidValues[col] = val;
+                    } else if (val === 'Weekend' && lastValidValues[col]) {
+                        row[col] = lastValidValues[col];
+                    }
+                });
+            });
+        }
+
+        function renderTableHeaders() {
+            const thead = document.getElementById('tableHeader');
+            if (tableColumns.length === 0) return;
+            
+            let html = '<tr class="bg-slate-800/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">';
+            tableColumns.forEach((col) => {
+                html += `<th class="py-4 px-4 text-slate-300 font-semibold">${col || 'Col'}</th>`;
+            });
+            html += '</tr>';
+            thead.innerHTML = html;
+        }
+
+        function displaySelectedMonthData() {
+            const selectedInputValue = document.getElementById('datePicker').value; // format: YYYY-MM-DD
+            if (!selectedInputValue) return;
+
+            // Extract target Year and Month (YYYY-MM)
+            const targetYearMonth = selectedInputValue.substring(0, 7);
+
+            // Filter all rows matching this year and month
+            const matchingRows = allRawData.filter(row => {
+                const sheetDateStr = row['Date'] || row[tableColumns[1]] || '';
+                const rowIso = parseDateToISO(sheetDateStr);
+                return rowIso.startsWith(targetYearMonth);
+            });
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            document.getElementById('monthlyRowCount').innerText = matchingRows.length;
+
+            if (matchingRows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="15" class="py-8 text-center text-slate-400">No data found for this month.</td></tr>`;
+                updateChart([]);
+                return;
+            }
+
+            let rowsHtml = '';
+            matchingRows.forEach((row, rIdx) => {
+                let rowHtml = `<tr class="hover:bg-slate-800/40 transition-colors">`;
+                tableColumns.forEach((col, idx) => {
+                    let val = row[col] || '-';
+                    let isPrice = idx >= 2 && (val.startsWith('\$') || (!isNaN(parseFloat(val)) && val.includes('.')));
+                    
+                    let cellClass = "py-4 px-4 text-slate-300";
+                    if (isPrice) cellClass = "py-4 px-4 text-emerald-400 font-mono font-medium";
+
+                    rowHtml += `<td class="${cellClass}">${val}</td>`;
+                });
+                rowHtml += `</tr>`;
+                rowsHtml += rowHtml;
+            });
+
+            tbody.innerHTML = rowsHtml;
+            updateChart(matchingRows);
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            let tickerMaxPrices = {};
+
+            // Find the maximum peak price for each ticker across the selected month's records
+            data.forEach(row => {
+                Object.keys(row).forEach((key, idx) => {
+                    if (idx >= 2) {
+                        const val = row[key];
+                        if (val && typeof val === 'string' && val !== '-' && val !== 'Weekend') {
+                            const num = parseFloat(val.replace(/[^0-9.-]+/g,""));
+                            if (!isNaN(num) && num > 0) {
+                                if (!tickerMaxPrices[key] || num > tickerMaxPrices[key]) {
+                                    tickerMaxPrices[key] = num;
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            let stockPrices = Object.keys(tickerMaxPrices).map(ticker => ({
+                ticker: ticker,
+                price: tickerMaxPrices[ticker]
+            }));
+
+            stockPrices.sort((a, b) => b.price - a.price);
+            const top10 = stockPrices.slice(0, 10);
+
+            const labels = top10.map(item => item.ticker);
+            const prices = top10.map(item => item.price);
+
+            if (priceChartInstance) {
+                priceChartInstance.destroy();
+            }
+
+            priceChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Max Price (\$)',
+                        data: prices,
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        // Initial Load
+        loadSheetData();
+    </script>
+</body>
+</html>
