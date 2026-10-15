@@ -120,16 +120,7 @@
         dots: true,
         loop: true,
     });
-// Example using JavaScript .map()
-tableData.map((row, index) => (
-  `<tr>
-     <td>${index + 1}</td>
-     <td>${row.depositDate}</td>
-     <td>${row.depositAmount}</td>
-     <td>${row.withdrawDate || '-'}</td>
-     <td>${row.withdrawAmount || '-'}</td>
-   </tr>`
-));
+
     
 })(jQuery);
 
