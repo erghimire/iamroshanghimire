@@ -115,7 +115,6 @@
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1954485553&single=true&output=csv';
 
         let chartInstance = null;
-
         function loadSheetData() {
             if(!SHEET_CSV_URL.includes('http')) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="py-12 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Deposite History tab inside the script tag.</td></tr>`;
