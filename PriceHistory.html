@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Share Alert App — Price History</h1>
-                    <p class="text-xs md:text-sm text-slate-400 mt-0.5">Select a specific date to inspect stock valuations</p>
+                    <p class="text-xs md:text-sm text-slate-400 mt-0.5">Select a specific date using the calendar picker to inspect stock valuations[cite: 2]</p>
                 </div>
             </div>
             
@@ -42,7 +42,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-slate-900/80 backdrop-blur border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-slate-200">Top 10 Peak Prices (Active Date View)</h2>
+                    <h2 class="text-lg font-bold text-slate-200">Top 10 Peak Prices (Active Date View)[cite: 2]</h2>
                     <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-medium">Market Analytics</span>
                 </div>
                 <div class="relative h-64 w-full">
@@ -53,7 +53,7 @@
             <div class="bg-gradient-to-br from-slate-900 to-emerald-950 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
                 <div>
                     <h2 class="text-lg font-bold text-slate-200 mb-2">Selection Overview</h2>
-                    <p class="text-xs text-slate-400 mb-6">Metrics reflecting your chosen date row.</p>
+                    <p class="text-xs text-slate-400 mb-6">Metrics reflecting your chosen date row[cite: 2].</p>
                 </div>
                 <div class="space-y-4">
                     <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
@@ -81,9 +81,8 @@
                 </div>
 
                 <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 shadow-inner">
-                    <select id="dateSelect" onchange="displaySelectedDateData()" class="bg-transparent text-sm text-white focus:outline-none cursor-pointer font-mono">
-                        <option value="" class="bg-slate-900">-- Select a Date --</option>
-                    </select>
+                    <!-- HTML5 Date Picker Input -->
+                    <input type="date" id="datePicker" onchange="displaySelectedDateData()" class="bg-transparent text-sm text-white focus:outline-none cursor-pointer font-mono color-scheme-dark">
                 </div>
             </div>
 
@@ -96,12 +95,11 @@
         </div>
 
         <footer class="text-center text-xs text-slate-500 pb-6">
-            Share Alert App &bull; Price History Module
+            Share Alert App &bull; Price History Module[cite: 2]
         </footer>
     </div>
 
     <script>
-        // REPLACE THIS URL with your published CSV link for the "Price History" tab
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1871836325&single=true&output=csv';
 
         let allRawData = [];
@@ -139,11 +137,15 @@
                     }
 
                     fillWeekendPrices(allRawData, tableColumns);
-                    populateDateDropdown();
                     renderTableHeaders();
                     
                     if (allRawData.length > 0) {
-                        document.getElementById('dateSelect').value = allRawData[0]['Date'] || '';
+                        // Set the date picker default value to the first available date row normalized to YYYY-MM-DD
+                        const firstDateStr = allRawData[0]['Date'] || allRawData[0][tableColumns[1]] || '';
+                        const parsedDate = parseDateToISO(firstDateStr);
+                        if (parsedDate) {
+                            document.getElementById('datePicker').value = parsedDate;
+                        }
                         displaySelectedDateData();
                     }
 
@@ -154,6 +156,16 @@
                     icon.classList.remove('animate-spin');
                 }
             });
+        }
+
+        // Helper function to convert various text date formats into standard YYYY-MM-DD for the date picker input
+        function parseDateToISO(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) {
+                return d.toISOString().split('T')[0];
+            }
+            return '';
         }
 
         function fillWeekendPrices(data, columns) {
@@ -171,21 +183,6 @@
             });
         }
 
-        function populateDateDropdown() {
-            const select = document.getElementById('dateSelect');
-            select.innerHTML = '';
-            allRawData.forEach(row => {
-                const dateVal = row['Date'] || row[tableColumns[1]];
-                if (dateVal) {
-                    const opt = document.createElement('option');
-                    opt.value = dateVal;
-                    opt.textContent = dateVal;
-                    opt.className = 'bg-slate-900';
-                    select.appendChild(opt);
-                }
-            });
-        }
-
         function renderTableHeaders() {
             const thead = document.getElementById('tableHeader');
             if (tableColumns.length === 0) return;
@@ -199,14 +196,21 @@
         }
 
         function displaySelectedDateData() {
-            const selectedDate = document.getElementById('dateSelect').value;
-            const targetRow = allRawData.find(row => (row['Date'] || row[tableColumns[1]]) === selectedDate);
+            const selectedInputValue = document.getElementById('datePicker').value; // format: YYYY-MM-DD
+            if (!selectedInputValue) return;
+
+            // Find the matching row by comparing normalized dates
+            const targetRow = allRawData.find(row => {
+                const sheetDateStr = row['Date'] || row[tableColumns[1]] || '';
+                return parseDateToISO(sheetDateStr) === selectedInputValue;
+            });
 
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
 
             if (!targetRow) {
-                tbody.innerHTML = `<tr><td colspan="15" class="py-8 text-center text-slate-400">No data found for this date.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="15" class="py-8 text-center text-slate-400">No data found for the selected date.</td></tr>`;
+                updateChart([]); // clear chart
                 return;
             }
 
