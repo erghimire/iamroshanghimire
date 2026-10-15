@@ -91,11 +91,19 @@
             <div class="overflow-x-auto">
                 <table id="dataTable" class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800/80 font-semibold">
-                            <th class="py-4 px-6">Deposit Date</th>
-                            <th class="py-4 px-6 text-right">Deposit Amount (AUD)</th>
-                            <th class="py-4 px-6 border-l border-slate-800/80">Withdraw Date</th>
-                            <th class="py-4 px-6 text-right">Withdraw Amount (AUD)</th>
+                        <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800/80 font-semibold select-none">
+                            <th onclick="sortTable(0, 'date')" class="py-4 px-6 cursor-pointer hover:text-slate-200 transition-colors">
+                                Deposit Date <span id="sort-icon-0">↕</span>
+                            </th>
+                            <th onclick="sortTable(1, 'amount')" class="py-4 px-6 text-right cursor-pointer hover:text-slate-200 transition-colors">
+                                Deposit Amount (AUD) <span id="sort-icon-1">↕</span>
+                            </th>
+                            <th onclick="sortTable(2, 'date')" class="py-4 px-6 border-l border-slate-800/80 cursor-pointer hover:text-slate-200 transition-colors">
+                                Withdraw Date <span id="sort-icon-2">↕</span>
+                            </th>
+                            <th onclick="sortTable(3, 'amount')" class="py-4 px-6 text-right cursor-pointer hover:text-slate-200 transition-colors">
+                                Withdraw Amount (AUD) <span id="sort-icon-3">↕</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-800/50 text-sm">
@@ -111,10 +119,13 @@
     </div>
 
     <script>
-        // REPLACE THIS URL with your published CSV link for the "Deposite History" tab
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1954485553&single=true&output=csv';
 
         let chartInstance = null;
+        let globalTransactions = []; // Store parsed transactions globally for sorting
+        let currentSortColumn = null;
+        let currentSortAsc = true;
+
         function loadSheetData() {
             if(!SHEET_CSV_URL.includes('http')) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="py-12 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Deposite History tab inside the script tag.</td></tr>`;
@@ -147,14 +158,11 @@
         }
 
         function processRows(rows) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
+            globalTransactions = [];
             let totalDepositNum = 0;
             let totalWithdrawNum = 0;
             let formattedTotalDeposit = '\$0.00';
             let formattedTotalWithdraw = '\$0.00';
-            let tableRowsHtml = '';
 
             for (let i = 2; i < rows.length; i++) {
                 const cols = rows[i];
@@ -177,22 +185,85 @@
                 totalDepositNum += cleanDepNum;
                 totalWithdrawNum += cleanWitNum;
 
-                tableRowsHtml += `
-                    <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="py-4 px-6 text-slate-300 font-medium">${depDate}</td>
-                        <td class="py-4 px-6 text-right font-mono text-emerald-400 font-semibold">${depAmt ? depAmt : '-'}</td>
-                        <td class="py-4 px-6 text-slate-300 font-medium border-l border-slate-800/60">${witDate}</td>
-                        <td class="py-4 px-6 text-right font-mono text-rose-400 font-semibold">${witAmt ? witAmt : '-'}</td>
-                    </tr>
-                `;
+                globalTransactions.push({
+                    depDate,
+                    depAmt,
+                    cleanDepNum,
+                    witDate,
+                    witAmt,
+                    cleanWitNum
+                });
             }
 
-            tbody.innerHTML = tableRowsHtml || `<tr><td colspan="4" class="py-12 text-center text-slate-400">No transaction records found.</td></tr>`;
+            renderTable();
 
             document.getElementById('totalDepositVal').innerText = formattedTotalDeposit !== '\$0.00' ? formattedTotalDeposit : `$${totalDepositNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
             document.getElementById('totalWithdrawVal').innerText = formattedTotalWithdraw !== '\$0.00' ? formattedTotalWithdraw : `$${totalWithdrawNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
 
             updateChart(totalDepositNum, totalWithdrawNum);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            let tableRowsHtml = '';
+
+            globalTransactions.forEach(tx => {
+                tableRowsHtml += `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <td class="py-4 px-6 text-slate-300 font-medium">${tx.depDate}</td>
+                        <td class="py-4 px-6 text-right font-mono text-emerald-400 font-semibold">${tx.depAmt ? tx.depAmt : '-'}</td>
+                        <td class="py-4 px-6 text-slate-300 font-medium border-l border-slate-800/60">${tx.witDate}</td>
+                        <td class="py-4 px-6 text-right font-mono text-rose-400 font-semibold">${tx.witAmt ? tx.witAmt : '-'}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = tableRowsHtml || `<tr><td colspan="4" class="py-12 text-center text-slate-400">No transaction records found.</td></tr>`;
+        }
+
+        function sortTable(colIndex, type) {
+            // Reset icons
+            for (let i = 0; i <= 3; i++) {
+                const iconElem = document.getElementById(`sort-icon-${i}`);
+                if (iconElem) iconElem.innerText = '↕';
+            }
+
+            if (currentSortColumn === colIndex) {
+                currentSortAsc = !currentSortAsc;
+            } else {
+                currentSortColumn = colIndex;
+                currentSortAsc = true;
+            }
+
+            const activeIcon = document.getElementById(`sort-icon-${colIndex}`);
+            if (activeIcon) {
+                activeIcon.innerText = currentSortAsc ? '▲' : '▼';
+            }
+
+            globalTransactions.sort((a, b) => {
+                let valA, valB;
+
+                if (type === 'date') {
+                    if (colIndex === 0) {
+                        valA = a.depDate ? new Date(a.depDate).getTime() : 0;
+                        valB = b.depDate ? new Date(b.depDate).getTime() : 0;
+                    } else {
+                        valA = a.witDate ? new Date(a.witDate).getTime() : 0;
+                        valB = b.witDate ? new Date(b.witDate).getTime() : 0;
+                    }
+                    if (isNaN(valA)) valA = 0;
+                    if (isNaN(valB)) valB = 0;
+                } else if (type === 'amount') {
+                    valA = colIndex === 1 ? a.cleanDepNum : a.cleanWitNum;
+                    valB = colIndex === 1 ? b.cleanDepNum : b.cleanWitNum;
+                }
+
+                if (valA < valB) return currentSortAsc ? -1 : 1;
+                if (valA > valB) return currentSortAsc ? 1 : -1;
+                return 0;
+            });
+
+            renderTable();
         }
 
         function updateChart(deposits, withdrawals) {
@@ -233,4 +304,3 @@
     </script>
 </body>
 </html>
-
