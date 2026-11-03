@@ -150,38 +150,6 @@
             text-align: justify;
         }
 
-        /* Graphical Skill Progress Bars & Grid */
-        .skills-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px 30px;
-        }
-
-        .skill-item {
-            font-size: 13.5px;
-        }
-
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--text-dark);
-        }
-
-        .progress-bar-bg {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-        }
-
         /* Career Experience Cards */
         .timeline-card {
             background: #ffffff;
@@ -227,7 +195,7 @@
             margin-bottom: 0;
         }
 
-        /* Graphical Check Grid for Additional Info */
+        /* Graphical Check Grid for Skills and Additional Info */
         .check-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -244,11 +212,16 @@
             padding: 10px 14px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            font-weight: 500;
         }
 
         .check-grid li i {
-            color: var(--accent-green);
+            color: var(--accent-blue);
             font-size: 14px;
+        }
+
+        .check-grid.additional-info li i {
+            color: var(--accent-green);
         }
 
         /* Footer styling with gradient & action button */
@@ -286,7 +259,7 @@
             .content {
                 padding: 20px;
             }
-            .skills-container, .check-grid {
+            .check-grid {
                 grid-template-columns: 1fr;
             }
             header.hero-header {
@@ -329,53 +302,23 @@
             </p>
         </div>
 
-        <!-- Skills Section with Graphic Progress Bars -->
+        <!-- Skills & Personal Attribute Section (Cleaned, no percentage bars) -->
         <div class="info-card">
             <h2 class="section-title">
                 <span class="icon-box"><i class="fa-solid fa-sliders"></i></span> Skills & Personal Attribute
             </h2>
-            <div class="skills-container">
-                <div class="skill-item">
-                    <div class="skill-name"><span>MS Office & Office 365</span><span>95%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Punctual and Hardworking</span><span>100%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Experienced with ArcGIS</span><span>85%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Active Team Member with a "Can-Do" Attitude</span><span>95%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Skilled in Soldering Electronic Components</span><span>90%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Capable of Working Under Pressure</span><span>90%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Knowledge in HTML, Word Press</span><span>80%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 80%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Strong Time Management Skills</span><span>95%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Excellent Problem-Solving Abilities</span><span>95%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>Effective Communication Skills</span><span>90%</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
-                </div>
-            </div>
+            <ul class="check-grid">
+                <li><i class="fa-solid fa-circle-check"></i> Proficient in Microsoft Office and Office 365</li>
+                <li><i class="fa-solid fa-circle-check"></i> Punctual and Hardworking</li>
+                <li><i class="fa-solid fa-circle-check"></i> Experienced with ArcGIS</li>
+                <li><i class="fa-solid fa-circle-check"></i> Active Team Member with a "Can-Do" Attitude</li>
+                <li><i class="fa-solid fa-circle-check"></i> Skilled in Soldering Electronic Components</li>
+                <li><i class="fa-solid fa-circle-check"></i> Capable of Working Under Pressure</li>
+                <li><i class="fa-solid fa-circle-check"></i> Knowledge in HTML, Word Press</li>
+                <li><i class="fa-solid fa-circle-check"></i> Strong Time Management Skills</li>
+                <li><i class="fa-solid fa-circle-check"></i> Excellent Problem-Solving Abilities</li>
+                <li><i class="fa-solid fa-circle-check"></i> Effective Communication Skills</li>
+            </ul>
         </div>
 
         <!-- Education Section -->
@@ -423,7 +366,7 @@
             <h2 class="section-heading section-title">
                 <span class="icon-box"><i class="fa-solid fa-shield-halved"></i></span> Additional Information
             </h2>
-            <ul class="check-grid">
+            <ul class="check-grid additional-info">
                 <li><i class="fa-solid fa-circle-check"></i> Full Time Working Right (No Work Restriction),</li>
                 <li><i class="fa-solid fa-circle-check"></i> Safe Work NSW White Card,</li>
                 <li><i class="fa-solid fa-circle-check"></i> Working with Children Check (WWCC),</li>
