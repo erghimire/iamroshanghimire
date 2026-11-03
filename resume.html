@@ -91,7 +91,7 @@
 
         /* Main Content Padding */
         .content {
-            padding: 20px 40px 40px 40px;
+            padding: 20px 40px 30px 40px;
         }
 
         /* Section Headings matching PDF format */
@@ -169,11 +169,6 @@
             margin-bottom: 4px;
         }
 
-        .job-title {
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
         .job-details {
             font-size: 13.5px;
             margin-top: 6px;
@@ -186,11 +181,31 @@
             margin-bottom: 8px;
         }
 
-        /* Footer styling matching header color */
+        /* Footer styling with Download PDF button */
         footer.pdf-footer {
             background-color: var(--header-navy);
-            height: 8px;
-            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 18px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: var(--header-navy);
         }
 
         /* Mobile Adjustments */
@@ -326,8 +341,12 @@
         </section>
     </div>
 
-    <!-- Bottom Accent Footer Line -->
-    <footer class="pdf-footer"></footer>
+    <!-- Footer containing PDF Download Link -->
+    <footer class="pdf-footer">
+        <a href="Resume_Roshan_Ghimire.pdf" class="download-btn" download>
+            <i class="fa-solid fa-file-pdf"></i> Click here to download PDF file
+        </a>
+    </footer>
 </div>
 
 </body>
