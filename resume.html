@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roshan Ghimire - Resume</title>
+    <title>Roshan Ghimire - Interactive Resume</title>
     <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --header-navy: #003b7a;
-            --header-accent: #0056b3;
-            --text-dark: #222222;
-            --text-muted: #555555;
-            --border-light: #dcdcdc;
+            --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0284c7 100%);
+            --header-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0284c7 100%);
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --accent-blue: #0284c7;
+            --accent-purple: #6366f1;
+            --accent-green: #10b981;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
         }
 
         * {
@@ -24,155 +29,192 @@
         }
 
         body {
-            font-family: 'Open Sans', Arial, sans-serif;
-            background-color: #eef2f5;
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            /* Dynamic background gradient mesh */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.2) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.9) 0px, transparent 100%);
+            background-attachment: fixed;
             color: var(--text-dark);
-            line-height: 1.5;
-            padding: 30px 15px;
+            line-height: 1.6;
+            padding: 40px 15px;
+            min-height: 100vh;
         }
 
-        /* Container designed like the PDF sheet */
-        .resume-card {
-            max-width: 850px;
+        .resume-container {
+            max-width: 920px;
             margin: 0 auto;
-            background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Hero Graphic Header */
+        header.hero-header {
+            background: var(--header-gradient);
+            color: #ffffff;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            /* Angled cut-out bottom design */
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+        }
+
+        header.hero-header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        header.hero-header .subtitle {
+            font-size: 15px;
+            color: #93c5fd;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .contact-pills {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .contact-pill {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .contact-pill:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content Layout */
+        .content {
+            padding: 30px 40px 40px 40px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title .icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Card Section Enclosures */
+        .info-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 14.5px;
+            color: var(--text-dark);
+            text-align: justify;
+        }
+
+        /* Graphical Skill Progress Bars & Grid */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 30px;
+        }
+
+        .skill-item {
+            font-size: 13.5px;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e2e8f0;
             border-radius: 4px;
             overflow: hidden;
         }
 
-        /* Top Header Graphic matching PDF design */
-        header.pdf-header {
-            background: linear-gradient(135deg, var(--header-navy) 0%, var(--header-accent) 100%);
-            color: #ffffff;
-            padding: 35px 30px 45px 30px;
-            text-align: center;
-            position: relative;
-            /* Angled graphic cut out at the bottom */
-            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
         }
 
-        header.pdf-header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+        /* Career Experience Cards */
+        .timeline-card {
+            background: #ffffff;
+            border-left: 4px solid var(--accent-blue);
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 15px;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .contact-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 14px;
-            color: #e0e8f5;
-        }
-
-        .contact-bar a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        .contact-bar a:hover {
-            text-decoration: underline;
-        }
-
-        .contact-bar .divider {
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 300;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Main Content Padding */
-        .content {
-            padding: 20px 40px 30px 40px;
-        }
-
-        /* Section Headings matching PDF format */
-        section {
-            margin-bottom: 25px;
-        }
-
-        h2.section-heading {
-            font-size: 18px;
+        .job-title {
+            font-size: 15.5px;
             font-weight: 700;
             color: var(--text-dark);
-            border-bottom: 1.5px solid var(--border-light);
-            padding-bottom: 4px;
-            margin-bottom: 12px;
         }
 
-        p {
-            font-size: 14px;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-            text-align: justify;
-        }
-
-        /* Two-Column Bullet List matching PDF Skills Section */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 30px;
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .skills-grid li {
-            font-size: 14px;
-            position: relative;
-            padding-left: 15px;
-        }
-
-        .skills-grid li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--text-dark);
-            font-weight: bold;
-        }
-
-        /* Bullet List for Additional Info */
-        .info-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .info-list li {
-            font-size: 14px;
-            position: relative;
-            padding-left: 15px;
-            margin-bottom: 4px;
-        }
-
-        .info-list li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--text-dark);
-            font-weight: bold;
-        }
-
-        /* Career History Styling */
-        .job-item {
-            margin-bottom: 16px;
-        }
-
-        .job-header {
-            font-size: 14.5px;
-            margin-bottom: 4px;
+        .job-meta {
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 8px;
         }
 
         .job-details {
             font-size: 13.5px;
-            margin-top: 6px;
-            padding-left: 10px;
+            margin-top: 10px;
+            color: #334155;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 8px;
         }
 
         .job-details p {
@@ -181,167 +223,229 @@
             margin-bottom: 8px;
         }
 
-        /* Footer styling with Download PDF button */
+        .job-details p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Graphical Check Grid for Additional Info */
+        .check-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            list-style: none;
+        }
+
+        .check-grid li {
+            font-size: 13.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .check-grid li i {
+            color: var(--accent-green);
+            font-size: 14px;
+        }
+
+        /* Footer styling with gradient & action button */
         footer.pdf-footer {
-            background-color: var(--header-navy);
-            padding: 20px;
+            background: var(--header-gradient);
+            padding: 25px;
             text-align: center;
         }
 
         .download-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: #ffffff;
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 600;
             text-decoration: none;
-            padding: 8px 18px;
-            background-color: rgba(255, 255, 255, 0.15);
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-            transition: all 0.2s ease-in-out;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
 
         .download-btn:hover {
-            background-color: #ffffff;
-            color: var(--header-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+            background: #ffffff;
+            color: var(--text-dark);
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 600px) {
+        /* Responsive Layout Adjustments */
+        @media (max-width: 650px) {
             .content {
-                padding: 15px 20px 30px 20px;
+                padding: 20px;
             }
-            .skills-grid {
+            .skills-container, .check-grid {
                 grid-template-columns: 1fr;
             }
-            .contact-bar {
-                flex-direction: column;
-                gap: 6px;
+            header.hero-header {
+                padding: 40px 20px;
             }
-            .contact-bar .divider {
-                display: none;
+            header.hero-header h1 {
+                font-size: 26px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="resume-card">
-    <!-- Top Header Banner matching original PDF style -->
-    <header class="pdf-header">
+<div class="resume-container">
+    <!-- Hero Graphic Header -->
+    <header class="hero-header">
         <h1>Roshan Ghimire</h1>
-        <div class="contact-bar">
-            <div class="contact-item">
-                <i class="fa-solid fa-envelope"></i>
-                <a href="mailto:iamroshanghimire@gmail.com">iamroshanghimire@gmail.com</a>
+        <div class="subtitle">IT Professional</div>
+        <div class="contact-pills">
+            <a href="mailto:iamroshanghimire@gmail.com" class="contact-pill">
+                <i class="fa-solid fa-envelope"></i> iamroshanghimire@gmail.com
+            </a>
+            <div class="contact-pill">
+                <i class="fa-solid fa-phone"></i> 045 2024 208
             </div>
-            <span class="divider">|</span>
-            <div class="contact-item">
-                <i class="fa-solid fa-phone"></i>
-                <span>045 2024 208</span>
-            </div>
-            <span class="divider">|</span>
-            <div class="contact-item">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>Parramatta, NSW, 2150</span>
+            <div class="contact-pill">
+                <i class="fa-solid fa-location-dot"></i> Parramatta, NSW, 2150
             </div>
         </div>
     </header>
 
     <div class="content">
         <!-- Summary Section -->
-        <section>
-            <h2 class="section-heading">Summary</h2>
+        <div class="info-card">
+            <h2 class="section-title">
+                <span class="icon-box"><i class="fa-solid fa-user"></i></span> Summary
+            </h2>
             <p>
                 A highly qualified and motivated IT worker with great technical support. Skills in the practical application of the IT solutions, employee training, and change management as well as setting up digital transformation processes. Able to effectively solve problems, plan and organize, as well as possess good physical and mental response capacity. An Electronics and Communication Engineering educated with certain practical experience as Information Officer, Store Team Member and Sanitation. Fully committed towards increasing the operational effectiveness and total organisational performance through the application of technologically driven innovations and best practices.
             </p>
-        </section>
+        </div>
 
-        <!-- Skills & Personal Attribute Section -->
-        <section>
-            <h2 class="section-heading">Skills & Personal Attribute</h2>
-            <ul class="skills-grid">
-                <li>Proficient in Microsoft Office and Office 365</li>
-                <li>Punctual and Hardworking</li>
-                <li>Experienced with ArcGIS</li>
-                <li>Active Team Member with a "Can-Do" Attitude</li>
-                <li>Skilled in Soldering Electronic Components</li>
-                <li>Capable of Working Under Pressure</li>
-                <li>Knowledge in HTML, WordPress</li>
-                <li>Strong Time Management Skills</li>
-                <li>Excellent Problem-Solving Abilities</li>
-                <li>Effective Communication Skills</li>
-            </ul>
-        </section>
-
-        <!-- Education Section -->
-        <section>
-            <h2 class="section-heading">Education</h2>
-            <p>
-                <strong>Bachelors in Electronics and Communication Engineering</strong> from Tribhuvan University, Nepal.<br>
-                <em>Graduated 2013</em>
-            </p>
-        </section>
+        <!-- Skills Section with Graphic Progress Bars -->
+        <div class="info-card">
+            <h2 class="section-title">
+                <span class="icon-box"><i class="fa-solid fa-sliders"></i></span> Skills & Personal Attributes
+            </h2>
+            <div class="skills-container">
+                <div class="skill-item">
+                    <div class="skill-name"><span>MS Office & Office 365</span><span>95%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Punctual & Hardworking</span><span>100%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>ArcGIS Experience</span><span>85%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Team Member ("Can-Do" Attitude)</span><span>95%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Soldering Electronic Components</span><span>90%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Working Under Pressure</span><span>90%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>HTML & WordPress</span><span>80%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 80%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Time Management</span><span>95%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Problem-Solving</span><span>95%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name"><span>Communication Skills</span><span>90%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 90%;"></div></div>
+                </div>
+            </div>
+        </div>
 
         <!-- Career History Section -->
-        <section>
-            <h2 class="section-heading">Career History</h2>
+        <div class="info-card">
+            <h2 class="section-title">
+                <span class="icon-box"><i class="fa-solid fa-briefcase"></i></span> Career History
+            </h2>
             
-            <div class="job-item">
-                <div class="job-header">
-                    <strong>Full Time Member</strong> at Harris Farm Market Service, Redfern, as a <strong>Protein Department Section Lead</strong> (August 2024 - Till Now).
-                </div>
+            <div class="timeline-card">
+                <div class="job-title">Full Time Member — Protein Department Section Lead</div>
+                <div class="job-meta">Harris Farm Market Service, Redfern • (August 2024 - Present)</div>
             </div>
 
-            <div class="job-item">
-                <div class="job-header">
-                    <strong>Part Time Worker</strong> at Prime Small Goods, Greenacre (July 2024 - August 2024)
-                </div>
+            <div class="timeline-card">
+                <div class="job-title">Part Time Worker</div>
+                <div class="job-meta">Prime Small Goods, Greenacre • (July 2024 - August 2024)</div>
             </div>
 
-            <div class="job-item">
-                <div class="job-header">
-                    <strong>Store Team Member</strong> at Woolworths Group, Mortdale (September 2023 - September 2025)
-                </div>
+            <div class="timeline-card">
+                <div class="job-title">Store Team Member</div>
+                <div class="job-meta">Woolworths Group, Mortdale • (September 2023 - September 2025)</div>
             </div>
 
-            <div class="job-item">
-                <div class="job-header">
-                    <strong>Information Technology Officer</strong> at Chautara Sangachokgadhi Municipality, Nepal (December 2014 - July 2023)
-                </div>
+            <div class="timeline-card">
+                <div class="job-title">Information Technology Officer</div>
+                <div class="job-meta">Chautara Sangachokgadhi Municipality, Nepal • (December 2014 - July 2023)</div>
                 <div class="job-details">
                     <p><strong>Key Responsibilities:</strong> In my capacity as a crew IT Officer, I offer technical aid and assimilate IT solutions for municipal administrative and business proceedings. I educate head staff and employees on the improvement of their IT and e-governance skills. I deal with the business software and tools, every software used in the business I arrange and make sure we document every tool used. I am responsible for the management of the implementation of the e-Governance solutions as well as the participation in financial planning/budgeting, and strategy/IT planning. My fields of competence include administration of research databases, digitization of resources and morphing of information centres for enhancing use of municipal resources and public service respectively.</p>
                     <p><strong>Achievements:</strong> As an IT Officer, I had implemented organizational learning strategies such as trainings that would improve the usage of IT and e-governance among the civil employees of the municipalities. I spearheaded the increase in the use of electronic governance initiatives, which increased efficiency of delivery of administrative and public services. The following are some of the ways I improved service efficiency: upgraded the manner in which the databases were run and the community affairs computerized. I also coordinated the daily business operations through proper utilization of business software instruments. Moreover, I was involved in the processes of annual and financial planning, and created information centres that would improve people’s access to the municipal documents. The customer has highly appreciated my innovations designed to enhance the status of IT assets and services in municipal organizations.</p>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Education Section -->
+        <div class="info-card">
+            <h2 class="section-title">
+                <span class="icon-box"><i class="fa-solid fa-graduation-cap"></i></span> Education
+            </h2>
+            <div class="timeline-card">
+                <div class="job-title">Bachelors in Electronics and Communication Engineering</div>
+                <div class="job-meta">Tribhuvan University, Nepal • Graduated 2013</div>
+            </div>
+        </div>
 
         <!-- Additional Information Section -->
-        <section>
-            <h2 class="section-heading">Additional Information</h2>
-            <ul class="info-list">
-                <li>Full Time Working Right (No Work Restriction)</li>
-                <li>Safe Work NSW White Card</li>
-                <li>Working with Children Check (WWCC)</li>
-                <li>Latest Police Check Certificate</li>
-                <li>Fully Vaccinated (Covid-19)</li>
-                <li>Have own Laptop and Printer</li>
-                <li>Easy access to Mobile Phone and Email</li>
+        <div class="info-card">
+            <h2 class="section-heading section-title">
+                <span class="icon-box"><i class="fa-solid fa-shield-halved"></i></span> Additional Information
+            </h2>
+            <ul class="check-grid">
+                <li><i class="fa-solid fa-circle-check"></i> Full Time Working Right (No Work Restriction)</li>
+                <li><i class="fa-solid fa-circle-check"></i> Safe Work NSW White Card</li>
+                <li><i class="fa-solid fa-circle-check"></i> Working with Children Check (WWCC)</li>
+                <li><i class="fa-solid fa-circle-check"></i> Latest Police Check Certificate</li>
+                <li><i class="fa-solid fa-circle-check"></i> Fully Vaccinated (Covid-19)</li>
+                <li><i class="fa-solid fa-circle-check"></i> Have own Laptop and Printer</li>
+                <li><i class="fa-solid fa-circle-check"></i> Easy access to Mobile Phone and Email</li>
             </ul>
-        </section>
+        </div>
 
         <!-- References Section -->
-        <section>
-            <h2 class="section-heading">References</h2>
-            <ul class="info-list">
-                <li>Available upon request.</li>
-            </ul>
-        </section>
+        <div class="info-card" style="margin-bottom: 0;">
+            <h2 class="section-title">
+                <span class="icon-box"><i class="fa-solid fa-user-check"></i></span> References
+            </h2>
+            <p>Available upon request.</p>
+        </div>
     </div>
 
-    <!-- Footer containing PDF Download Link -->
+    <!-- Gradient Footer with Glowing Action Button -->
     <footer class="pdf-footer">
         <a href="Resume_Roshan_Ghimire.pdf" class="download-btn" download>
             <i class="fa-solid fa-file-pdf"></i> Click here to download PDF file
