@@ -3,177 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume - Roshan Ghimire</title>
+    <title>Roshan Ghimire - Professional Resume</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        :root {
+            --primary-color: #1e293b;
+            --accent-color: #2563eb;
+            --bg-sidebar: #0f172a;
+            --bg-content: #ffffff;
+            --text-dark: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-dark);
             line-height: 1.6;
-            color: #333333;
-            background-color: #f4f4f9;
-            padding: 20px;
+            padding: 40px 20px;
         }
-        .resume-container {
-            max-width: 800px;
+
+        .resume-card {
+            max-width: 950px;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            background: var(--bg-content);
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
-        header {
-            border-bottom: 2px solid #2c3e50;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 32%;
+            background-color: var(--bg-sidebar);
+            color: #ffffff;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
-        h1 {
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 8px;
+
+        .profile-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #ffffff;
+            margin-bottom: 5px;
         }
-        .contact-info {
+
+        .profile-header .title {
+            color: #94a3b8;
             font-size: 14px;
-            color: #555555;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .contact-info a {
-            color: #2980b9;
-            text-decoration: none;
+
+        .sidebar-section h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent-color);
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
         }
-        .contact-info a:hover {
-            text-decoration: underline;
+
+        .contact-list {
+            list-style: none;
         }
-        section {
-            margin-bottom: 25px;
-        }
-        h2 {
-            font-size: 18px;
-            color: #2c3e50;
-            border-bottom: 1px solid #dddddd;
-            padding-bottom: 5px;
+
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            color: #cbd5e1;
             margin-bottom: 12px;
+            word-break: break-word;
+        }
+
+        .contact-list i {
+            color: var(--accent-color);
+            width: 16px;
+            text-align: center;
+        }
+
+        .contact-list a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-list a:hover {
+            color: #ffffff;
+        }
+
+        /* Skills Badges */
+        .skills-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-badge {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-list i {
+            color: #10b981;
+            font-size: 12px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            width: 68%;
+            padding: 40px;
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        p {
-            font-size: 14.5px;
-            margin-bottom: 10px;
+
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 16px;
         }
-        ul {
-            list-style-type: square;
-            margin-left: 20px;
-            font-size: 14.5px;
+
+        .summary-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            text-align: justify;
         }
-        li {
-            margin-bottom: 6px;
+
+        /* Experience Timeline */
+        .timeline {
+            position: relative;
+            border-left: 2px solid var(--border-color);
+            padding-left: 20px;
+            margin-left: 5px;
         }
-        .job {
-            margin-bottom: 15px;
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
         }
-        .job-title {
-            font-weight: bold;
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 2px solid #ffffff;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .job-role {
             font-size: 15px;
-            color: #2c3e50;
+            font-weight: 600;
+            color: var(--primary-color);
         }
+
+        .job-company {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
         .job-date {
-            font-style: italic;
-            color: #666666;
+            font-size: 12px;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .job-box {
+            background-color: #f8fafc;
+            border-left: 3px solid var(--accent-color);
+            padding: 12px 15px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 8px;
             font-size: 13.5px;
         }
-        .job-details {
-            margin-top: 6px;
+
+        .job-box strong {
+            color: var(--primary-color);
         }
-        .bold {
-            font-weight: bold;
+
+        .job-box p {
+            margin-bottom: 8px;
+        }
+
+        .job-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .resume-card {
+                flex-direction: column;
+            }
+            .sidebar, .main-content {
+                width: 100%;
+            }
+            .job-header {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+
+        /* Print Optimization */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .resume-card {
+                box-shadow: none;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="resume-container">
-    <header>
-        <h1>Roshan Ghimire</h1>
-        <div class="contact-info">
-            Email: <a href="mailto:iamroshanghimire@gmail.com">iamroshanghimire@gmail.com</a> | 
-            Phone: 045 2024 208 | 
-            Location: Parramatta, NSW, 2150
-        </div>
-    </header>
-
-    <section>
-        <h2>Summary</h2>
-        <p>A highly qualified and motivated IT worker with great technical support. Skills in the practical application of the IT solutions, employee training, and change management as well as setting up digital transformation processes. Able to effectively solve problems, plan and organize, as well as possess good physical and mental response capacity. An Electronics and Communication Engineering educated with certain practical experience as Information Officer, Store Team Member and Sanitation. Fully committed towards increasing the operational effectiveness and total organisational performance through the application of technologically driven innovations and best practices.</p>
-    </section>
-
-    <section>
-        <h2>Skills & Personal Attributes</h2>
-        <ul>
-            <li>Proficient in Microsoft Office and Office 365</li>
-            <li>Experienced with ArcGIS</li>
-            <li>Skilled in Soldering Electronic Components</li>
-            <li>Knowledge in HTML, WordPress</li>
-            <li>Excellent Problem-Solving Abilities</li>
-            <li>Punctual and Hardworking</li>
-            <li>Active Team Member with a "Can-Do" Attitude</li>
-            <li>Capable of Working Under Pressure</li>
-            <li>Strong Time Management Skills</li>
-            <li>Effective Communication Skills</li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>Education</h2>
-        <p><span class="bold">Bachelors in Electronics and Communication Engineering</span> — Tribhuvan University, Nepal <span class="job-date">(Graduated 2013)</span></p>
-    </section>
-
-    <section>
-        <h2>Career History</h2>
-        
-        <div class="job">
-            <div class="job-title">Full Time Member — Harris Farm Market Service, Redfern</div>
-            <div class="job-date">Protein Department Section Lead (August 2024 – Present)</div>
+<div class="resume-card">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="profile-header">
+            <h1>Roshan Ghimire</h1>
+            <div class="title">IT Professional</div>
         </div>
 
-        <div class="job">
-            <div class="job-title">Part Time Worker — Prime Small Goods, Greenacre</div>
-            <div class="job-date">July 2024 – August 2024</div>
+        <div class="sidebar-section">
+            <h3>Contact Info</h3>
+            <ul class="contact-list">
+                <li>
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:iamroshanghimire@gmail.com">iamroshanghimire@gmail.com</a>
+                </li>
+                <li>
+                    <i class="fa-solid fa-phone"></i>
+                    <span>045 2024 208</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Parramatta, NSW, 2150</span>
+                </li>
+            </ul>
         </div>
 
-        <div class="job">
-            <div class="job-title">Store Team Member — Woolworths Group, Mortdale</div>
-            <div class="job-date">September 2023 – September 2025</div>
-        </div>
-
-        <div class="job">
-            <div class="job-title">Information Technology Officer — Chautara Sangachokgadhi Municipality, Nepal</div>
-            <div class="job-date">December 2014 – July 2023</div>
-            <div class="job-details">
-                <p><span class="bold">Key Responsibilities:</span> In my capacity as a crew IT Officer, I offer technical aid and assimilate IT solutions for municipal administrative and business proceedings. I educate head staff and employees on the improvement of their IT and e-governance skills. I deal with the business software and tools, every software used in the business I arrange and make sure we document every tool used. I am responsible for the management of the implementation of the e-Governance solutions as well as the participation in financial planning/budgeting, and strategy/IT planning. My fields of competence include administration of research databases, digitization of resources and morphing of information centres for enhancing use of municipal resources and public service respectively.</p>
-                <p><span class="bold">Achievements:</span> As an IT Officer, I had implemented organizational learning strategies such as trainings that would improve the usage of IT and e-governance among the civil employees of the municipalities. I spearheaded the increase in the use of electronic governance initiatives, which increased efficiency of delivery of administrative and public services. Upgraded the manner in which the databases were run and the community affairs computerized. Coordinated the daily business operations through proper utilization of business software instruments. Involved in the processes of annual and financial planning, and created information centres that would improve people’s access to the municipal documents.</p>
+        <div class="sidebar-section">
+            <h3>Skills & Abilities</h3>
+            <div class="skills-flex">
+                <span class="skill-badge">MS Office & 365</span>
+                <span class="skill-badge">ArcGIS</span>
+                <span class="skill-badge">Soldering Electronics</span>
+                <span class="skill-badge">HTML</span>
+                <span class="skill-badge">WordPress</span>
+                <span class="skill-badge">Problem Solving</span>
+                <span class="skill-badge">Time Management</span>
+                <span class="skill-badge">Communication</span>
             </div>
         </div>
-    </section>
 
-    <section>
-        <h2>Additional Information</h2>
-        <ul>
-            <li>Full Time Working Right (No Work Restriction)</li>
-            <li>Safe Work NSW White Card</li>
-            <li>Working with Children Check (WWCC)</li>
-            <li>Latest Police Check Certificate</li>
-            <li>Fully Vaccinated (Covid-19)</li>
-            <li>Have own Laptop and Printer</li>
-            <li>Easy access to Mobile Phone and Email</li>
-        </ul>
-    </section>
+        <div class="sidebar-section">
+            <h3>Additional Info</h3>
+            <ul class="info-list">
+                <li><i class="fa-solid fa-check"></i> Full Working Right (No Limit)</li>
+                <li><i class="fa-solid fa-check"></i> NSW White Card</li>
+                <li><i class="fa-solid fa-check"></i> WWCC Clearance</li>
+                <li><i class="fa-solid fa-check"></i> Police Check Certificate</li>
+                <li><i class="fa-solid fa-check"></i> Fully Vaccinated</li>
+                <li><i class="fa-solid fa-check"></i> Laptop & Printer Equipped</li>
+            </ul>
+        </div>
 
-    <section>
-        <h2>References</h2>
-        <p>Available upon request.</p>
-    </section>
+        <div class="sidebar-section">
+            <h3>References</h3>
+            <p style="font-size: 13px; color: #cbd5e1;">Available upon request.</p>
+        </div>
+    </aside>
+
+    <!-- Right Main Content Area -->
+    <main class="main-content">
+        <!-- Professional Summary -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-user"></i> Summary
+            </h2>
+            <p class="summary-text">
+                Highly qualified and motivated IT professional with extensive experience delivering practical technical support, e-governance solutions, and digital transformation initiatives. Proven track record in staff training, change management, and optimizing municipal operational effectiveness. Educated in Electronics and Communication Engineering with strong analytical and problem-solving skills across administrative, retail, and municipal sectors.
+            </p>
+        </section>
+
+        <!-- Career History -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-briefcase"></i> Career History
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-role">Protein Department Section Lead</div>
+                            <div class="job-company">Harris Farm Market Service — Redfern</div>
+                        </div>
+                        <span class="job-date">Aug 2024 – Present</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-role">Part Time Worker</div>
+                            <div class="job-company">Prime Small Goods — Greenacre</div>
+                        </div>
+                        <span class="job-date">Jul 2024 – Aug 2024</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-role">Store Team Member</div>
+                            <div class="job-company">Woolworths Group — Mortdale</div>
+                        </div>
+                        <span class="job-date">Sep 2023 – Sep 2025</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-role">Information Technology Officer</div>
+                            <div class="job-company">Chautara Sangachokgadhi Municipality — Nepal</div>
+                        </div>
+                        <span class="job-date">Dec 2014 – Jul 2023</span>
+                    </div>
+                    <div class="job-box">
+                        <p><strong>Key Responsibilities:</strong> Delivered comprehensive technical support and integrated IT solutions across municipal operations. Led e-governance implementation, staff technical training, database administration, resource digitization, and financial IT planning.</p>
+                        <p><strong>Achievements:</strong> Spearheaded digital transformation initiatives that improved public service efficiency. Automated municipal database operations and computerized community records, earning high appreciation for advancing local government IT infrastructure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-graduation-cap"></i> Education
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-role">Bachelor of Electronics & Communication Engineering</div>
+                            <div class="job-company">Tribhuvan University — Nepal</div>
+                        </div>
+                        <span class="job-date">Graduated 2013</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </div>
 
 </body>
