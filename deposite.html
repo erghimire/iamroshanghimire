@@ -85,15 +85,15 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE: Monthly & Yearly Sortable Column Chart -->
+        <!-- Monthly & Yearly Sortable Column Chart -->
         <div class="bg-slate-900/90 backdrop-blur border border-slate-800/80 p-6 md:p-8 rounded-3xl shadow-2xl">
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
                 <div>
                     <h2 class="text-lg font-bold text-slate-200">Monthly & Yearly Cashflow Comparison</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Grouped total deposits and withdrawals by period</p>
+                    <p id="barChartSubtitle" class="text-xs text-slate-400 mt-0.5">Showing monthly totals for selected year</p>
                 </div>
 
-                <!-- Chart Controls: Timeframe & Sort -->
+                <!-- Chart Controls: Timeframe, Year Filter & Sort -->
                 <div class="flex flex-wrap items-center gap-3">
                     <!-- Period Toggle (Monthly / Yearly) -->
                     <div class="inline-flex bg-slate-950 p-1 rounded-xl border border-slate-800">
@@ -103,6 +103,14 @@
                         <button id="btn-period-yearly" onclick="setBarPeriod('yearly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
                             Yearly
                         </button>
+                    </div>
+
+                    <!-- Year Selector (Visible in Monthly Mode) -->
+                    <div id="yearFilterWrapper" class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 font-medium">Year:</span>
+                        <select id="barYearSelect" onchange="setBarYear(this.value)" class="bg-transparent text-xs font-semibold text-emerald-400 focus:outline-none cursor-pointer">
+                            <!-- Populated dynamically with available years -->
+                        </select>
                     </div>
 
                     <!-- Sort Selector -->
@@ -178,6 +186,7 @@
         // State for the Monthly/Yearly Column Chart
         let barPeriodMode = 'monthly'; // 'monthly' | 'yearly'
         let barSortMode = 'date-asc';  // 'date-asc' | 'date-desc' | 'dep-desc' | 'wit-desc'
+        let selectedYear = null;       // Stores the currently selected year (e.g., 2026)
 
         function loadSheetData() {
             if (!SHEET_CSV_URL.includes('http')) {
@@ -278,6 +287,7 @@
                 : `$${totalWithdrawNum.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
             updateChart(totalDepositNum, totalWithdrawNum);
+            populateYearDropdown();
             updatePeriodBarChart();
         }
 
@@ -369,18 +379,59 @@
             });
         }
 
-        // --- NEW FEATURE FUNCTIONS: Monthly & Yearly Column Chart ---
+        // --- Populate available years from transaction dates ---
+        function populateYearDropdown() {
+            const yearsSet = new Set();
+
+            globalTransactions.forEach(tx => {
+                if (tx.cleanDepNum > 0) {
+                    const dDate = parseFlexibleDate(tx.depDate);
+                    if (dDate) yearsSet.add(dDate.getFullYear());
+                }
+                if (tx.cleanWitNum > 0) {
+                    const wDate = parseFlexibleDate(tx.witDate);
+                    if (wDate) yearsSet.add(wDate.getFullYear());
+                }
+            });
+
+            // Sort years descending (e.g., 2026, 2025, 2024)
+            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+            const yearSelect = document.getElementById('barYearSelect');
+
+            if (sortedYears.length === 0) {
+                const currentYear = new Date().getFullYear();
+                sortedYears.push(currentYear);
+            }
+
+            // Preserve previous selection if it still exists, otherwise default to latest year
+            if (!selectedYear || !sortedYears.includes(Number(selectedYear))) {
+                selectedYear = sortedYears[0];
+            }
+
+            yearSelect.innerHTML = sortedYears
+                .map(y => `<option value="${y}" class="bg-slate-900" ${Number(y) === Number(selectedYear) ? 'selected' : ''}>${y}</option>`)
+                .join('');
+        }
+
+        function setBarYear(yearVal) {
+            selectedYear = Number(yearVal);
+            updatePeriodBarChart();
+        }
+
         function setBarPeriod(period) {
             barPeriodMode = period;
             const btnMonthly = document.getElementById('btn-period-monthly');
             const btnYearly = document.getElementById('btn-period-yearly');
+            const yearWrapper = document.getElementById('yearFilterWrapper');
 
             if (period === 'monthly') {
                 btnMonthly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow cursor-pointer';
                 btnYearly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+                yearWrapper.classList.remove('hidden');
             } else {
                 btnYearly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow cursor-pointer';
                 btnMonthly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+                yearWrapper.classList.add('hidden');
             }
 
             updatePeriodBarChart();
@@ -394,49 +445,53 @@
         function updatePeriodBarChart() {
             const grouped = {};
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const subtitleEl = document.getElementById('barChartSubtitle');
 
-            const getBucketInfo = (dateObj) => {
+            if (barPeriodMode === 'monthly') {
+                subtitleEl.innerText = `Showing monthly totals for ${selectedYear}`;
+            } else {
+                subtitleEl.innerText = `Showing annual totals across all years`;
+            }
+
+            const processEntry = (dateObj, amount, type) => {
+                if (!dateObj || amount <= 0) return;
                 const year = dateObj.getFullYear();
+
+                // In Monthly mode, filter strictly to the selected year
+                if (barPeriodMode === 'monthly' && year !== Number(selectedYear)) {
+                    return;
+                }
+
+                let key, label, sortTime;
                 if (barPeriodMode === 'yearly') {
-                    return {
-                        key: `${year}`,
-                        label: `${year}`,
-                        sortTime: new Date(year, 0, 1).getTime()
-                    };
+                    key = `${year}`;
+                    label = `${year}`;
+                    sortTime = new Date(year, 0, 1).getTime();
                 } else {
                     const month = dateObj.getMonth();
                     const paddedMonth = String(month + 1).padStart(2, '0');
-                    return {
-                        key: `${year}-${paddedMonth}`,
-                        label: `${monthNames[month]} ${year}`,
-                        sortTime: new Date(year, month, 1).getTime()
-                    };
+                    key = `${paddedMonth}`;
+                    label = `${monthNames[month]}`; // Only show month name on X-axis
+                    sortTime = month;
+                }
+
+                if (!grouped[key]) {
+                    grouped[key] = { label, sortTime, deposits: 0, withdrawals: 0 };
+                }
+
+                if (type === 'deposit') {
+                    grouped[key].deposits += amount;
+                } else {
+                    grouped[key].withdrawals += amount;
                 }
             };
 
             globalTransactions.forEach(tx => {
-                // Aggregate Deposits by Deposit Date
                 if (tx.cleanDepNum > 0) {
-                    const dDate = parseFlexibleDate(tx.depDate);
-                    if (dDate) {
-                        const bucket = getBucketInfo(dDate);
-                        if (!grouped[bucket.key]) {
-                            grouped[bucket.key] = { label: bucket.label, sortTime: bucket.sortTime, deposits: 0, withdrawals: 0 };
-                        }
-                        grouped[bucket.key].deposits += tx.cleanDepNum;
-                    }
+                    processEntry(parseFlexibleDate(tx.depDate), tx.cleanDepNum, 'deposit');
                 }
-
-                // Aggregate Withdrawals by Withdraw Date
                 if (tx.cleanWitNum > 0) {
-                    const wDate = parseFlexibleDate(tx.witDate);
-                    if (wDate) {
-                        const bucket = getBucketInfo(wDate);
-                        if (!grouped[bucket.key]) {
-                            grouped[bucket.key] = { label: bucket.label, sortTime: bucket.sortTime, deposits: 0, withdrawals: 0 };
-                        }
-                        grouped[bucket.key].withdrawals += tx.cleanWitNum;
-                    }
+                    processEntry(parseFlexibleDate(tx.witDate), tx.cleanWitNum, 'withdraw');
                 }
             });
 
@@ -502,6 +557,10 @@
                             borderColor: '#334155',
                             borderWidth: 1,
                             callbacks: {
+                                title: function(tooltipItems) {
+                                    const label = tooltipItems[0].label;
+                                    return barPeriodMode === 'monthly' ? `${label} ${selectedYear}` : `Year ${label}`;
+                                },
                                 label: function(context) {
                                     const val = context.parsed.y || 0;
                                     return `${context.dataset.label}: $${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -512,7 +571,7 @@
                     scales: {
                         x: {
                             grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } }
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 12, weight: '500' } }
                         },
                         y: {
                             beginAtZero: true,
