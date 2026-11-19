@@ -16,54 +16,64 @@
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+
     <div class="max-w-7xl mx-auto space-y-8">
-        
         <!-- Header Section -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950 p-6 md:p-8 rounded-3xl border border-slate-800/80 shadow-2xl gap-6">
             <div class="flex items-center gap-5">
                 <div class="bg-emerald-500/10 p-4 rounded-2xl border border-emerald-500/20 shadow-inner">
-                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Fund History & Cashflow</h1>
-                    <p class="text-xs md:text-sm text-slate-400 mt-1">Live analytics synced automatically from your <a href="https://docs.google.com/spreadsheets/d/1Bf-dTSVGahobo6dsb7zRaquIZYmEAE-I0OiYoDOvqRA/edit?gid=1954485553#gid=1954485553" target="_blank" class="text-emerald-400 hover:underline">Share Alert App</a> sheet</p>
+                    <p class="text-xs md:text-sm text-slate-400 mt-1">
+                        Live analytics synced automatically from your 
+                        <a href="https://docs.google.com/spreadsheets/d/1Bf-dTSVGahobo6dsb7zRaquIZYmEAE-I0OiYoDOvqRA/edit?gid=1954485553#gid=1954485553" target="_blank" class="text-emerald-400 hover:underline">Share Alert App</a> sheet
+                    </p>
                 </div>
             </div>
-            
             <div class="flex items-center gap-3 w-full md:w-auto">
                 <button id="refreshBtn" onclick="loadSheetData()" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20 cursor-pointer active:scale-95 w-full md:w-auto">
-                    <svg id="refreshIcon" class="w-4 h-4 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <svg id="refreshIcon" class="w-4 h-4 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
                     Refresh Sync
                 </button>
             </div>
         </header>
 
-        <!-- Summary Metric Cards & Advanced Chart Grid -->
+        <!-- Summary Metric Cards & Doughnut Chart Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left Column: Total Cards -->
             <div class="space-y-6 flex flex-col justify-between">
                 <div class="bg-gradient-to-br from-slate-900 to-emerald-950/30 border border-slate-800/80 p-6 rounded-3xl shadow-xl flex justify-between items-center">
                     <div>
                         <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Deposits</p>
-                        <h3 id="totalDepositVal" class="text-2xl md:text-3xl font-extrabold text-emerald-400 font-mono mt-1">\$0.00</h3>
+                        <h3 id="totalDepositVal" class="text-2xl md:text-3xl font-extrabold text-emerald-400 font-mono mt-1">$0.00</h3>
                     </div>
                     <div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 text-emerald-400 shadow-inner">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
                     </div>
                 </div>
 
                 <div class="bg-gradient-to-br from-slate-900 to-rose-950/30 border border-slate-800/80 p-6 rounded-3xl shadow-xl flex justify-between items-center">
                     <div>
                         <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Withdrawals</p>
-                        <h3 id="totalWithdrawVal" class="text-2xl md:text-3xl font-extrabold text-rose-400 font-mono mt-1">\$0.00</h3>
+                        <h3 id="totalWithdrawVal" class="text-2xl md:text-3xl font-extrabold text-rose-400 font-mono mt-1">$0.00</h3>
                     </div>
                     <div class="bg-rose-500/10 p-3 rounded-2xl border border-rose-500/20 text-rose-400 shadow-inner">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                        </svg>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Advanced Chart -->
+            <!-- Right Column: Overall Ratio Chart -->
             <div class="lg:col-span-2 bg-slate-900/90 backdrop-blur border border-slate-800/80 p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-base font-bold text-slate-200">Cashflow Distribution Analytics</h2>
@@ -75,12 +85,50 @@
             </div>
         </div>
 
+        <!-- NEW FEATURE: Monthly & Yearly Sortable Column Chart -->
+        <div class="bg-slate-900/90 backdrop-blur border border-slate-800/80 p-6 md:p-8 rounded-3xl shadow-2xl">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-200">Monthly & Yearly Cashflow Comparison</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Grouped total deposits and withdrawals by period</p>
+                </div>
+
+                <!-- Chart Controls: Timeframe & Sort -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <!-- Period Toggle (Monthly / Yearly) -->
+                    <div class="inline-flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button id="btn-period-monthly" onclick="setBarPeriod('monthly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow cursor-pointer">
+                            Monthly
+                        </button>
+                        <button id="btn-period-yearly" onclick="setBarPeriod('yearly')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+                            Yearly
+                        </button>
+                    </div>
+
+                    <!-- Sort Selector -->
+                    <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 font-medium">Sort:</span>
+                        <select id="barSortSelect" onchange="setBarSort(this.value)" class="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer">
+                            <option value="date-asc" class="bg-slate-900">Date (Oldest First)</option>
+                            <option value="date-desc" class="bg-slate-900">Date (Newest First)</option>
+                            <option value="dep-desc" class="bg-slate-900">Highest Deposits</option>
+                            <option value="wit-desc" class="bg-slate-900">Highest Withdrawals</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative h-72 md:h-80 w-full">
+                <canvas id="periodBarChart"></canvas>
+            </div>
+        </div>
+
         <!-- Data Table Section -->
         <div class="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden">
             <div class="p-6 bg-slate-800/40 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-slate-200">Transaction History Log</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">All the Amount are in Australian Doller (AUD $)</p>
+                    <p class="text-xs text-slate-400 mt-0.5">All the Amount are in Australian Dollar (AUD $)</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -122,12 +170,17 @@
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTuG_3xn7oY5-xtXKk80cO1pw1MPFESrq67FBbcyTSpSeFvOuHYCBXhtO9XoKnzT4ODPrh6-YOMTZ05/pub?gid=1954485553&single=true&output=csv';
 
         let chartInstance = null;
+        let barChartInstance = null;
         let globalTransactions = []; // Store parsed transactions globally for sorting
         let currentSortColumn = null;
         let currentSortAsc = true;
 
+        // State for the Monthly/Yearly Column Chart
+        let barPeriodMode = 'monthly'; // 'monthly' | 'yearly'
+        let barSortMode = 'date-asc';  // 'date-asc' | 'date-desc' | 'dep-desc' | 'wit-desc'
+
         function loadSheetData() {
-            if(!SHEET_CSV_URL.includes('http')) {
+            if (!SHEET_CSV_URL.includes('http')) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" class="py-12 text-center text-amber-400 font-medium">⚠️ Please configure your published Google Sheet CSV URL for the Deposite History tab inside the script tag.</td></tr>`;
                 return;
             }
@@ -157,12 +210,31 @@
             });
         }
 
+        // Helper to reliably parse dates (handles DD/MM/YYYY and YYYY-MM-DD)
+        function parseFlexibleDate(dateStr) {
+            if (!dateStr) return null;
+            const trimmed = dateStr.trim();
+            
+            // Check DD/MM/YYYY or D/M/YYYY format
+            const dmyMatch = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (dmyMatch) {
+                const day = parseInt(dmyMatch[1], 10);
+                const month = parseInt(dmyMatch[2], 10) - 1;
+                const year = parseInt(dmyMatch[3], 10);
+                const d = new Date(year, month, day);
+                return isNaN(d.getTime()) ? null : d;
+            }
+
+            const parsed = new Date(trimmed);
+            return isNaN(parsed.getTime()) ? null : parsed;
+        }
+
         function processRows(rows) {
             globalTransactions = [];
             let totalDepositNum = 0;
             let totalWithdrawNum = 0;
-            let formattedTotalDeposit = '\$0.00';
-            let formattedTotalWithdraw = '\$0.00';
+            let formattedTotalDeposit = '$0.00';
+            let formattedTotalWithdraw = '$0.00';
 
             for (let i = 2; i < rows.length; i++) {
                 const cols = rows[i];
@@ -179,8 +251,8 @@
                     continue;
                 }
 
-                const cleanDepNum = parseFloat((depAmt || '').replace(/[^0-9.-]+/g,"")) || 0;
-                const cleanWitNum = parseFloat((witAmt || '').replace(/[^0-9.-]+/g,"")) || 0;
+                const cleanDepNum = parseFloat((depAmt || '').replace(/[^0-9.-]+/g, "")) || 0;
+                const cleanWitNum = parseFloat((witAmt || '').replace(/[^0-9.-]+/g, "")) || 0;
 
                 totalDepositNum += cleanDepNum;
                 totalWithdrawNum += cleanWitNum;
@@ -197,10 +269,16 @@
 
             renderTable();
 
-            document.getElementById('totalDepositVal').innerText = formattedTotalDeposit !== '\$0.00' ? formattedTotalDeposit : `$${totalDepositNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-            document.getElementById('totalWithdrawVal').innerText = formattedTotalWithdraw !== '\$0.00' ? formattedTotalWithdraw : `$${totalWithdrawNum.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('totalDepositVal').innerText = formattedTotalDeposit !== '$0.00'
+                ? formattedTotalDeposit
+                : `$${totalDepositNum.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+
+            document.getElementById('totalWithdrawVal').innerText = formattedTotalWithdraw !== '$0.00'
+                ? formattedTotalWithdraw
+                : `$${totalWithdrawNum.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
             updateChart(totalDepositNum, totalWithdrawNum);
+            updatePeriodBarChart();
         }
 
         function renderTable() {
@@ -222,7 +300,6 @@
         }
 
         function sortTable(colIndex, type) {
-            // Reset icons
             for (let i = 0; i <= 3; i++) {
                 const iconElem = document.getElementById(`sort-icon-${i}`);
                 if (iconElem) iconElem.innerText = '↕';
@@ -242,17 +319,11 @@
 
             globalTransactions.sort((a, b) => {
                 let valA, valB;
-
                 if (type === 'date') {
-                    if (colIndex === 0) {
-                        valA = a.depDate ? new Date(a.depDate).getTime() : 0;
-                        valB = b.depDate ? new Date(b.depDate).getTime() : 0;
-                    } else {
-                        valA = a.witDate ? new Date(a.witDate).getTime() : 0;
-                        valB = b.witDate ? new Date(b.witDate).getTime() : 0;
-                    }
-                    if (isNaN(valA)) valA = 0;
-                    if (isNaN(valB)) valB = 0;
+                    const dA = colIndex === 0 ? parseFlexibleDate(a.depDate) : parseFlexibleDate(a.witDate);
+                    const dB = colIndex === 0 ? parseFlexibleDate(b.depDate) : parseFlexibleDate(b.witDate);
+                    valA = dA ? dA.getTime() : 0;
+                    valB = dB ? dB.getTime() : 0;
                 } else if (type === 'amount') {
                     valA = colIndex === 1 ? a.cleanDepNum : a.cleanWitNum;
                     valB = colIndex === 1 ? b.cleanDepNum : b.cleanWitNum;
@@ -268,7 +339,6 @@
 
         function updateChart(deposits, withdrawals) {
             const ctx = document.getElementById('cashflowChart').getContext('2d');
-
             if (chartInstance) {
                 chartInstance.destroy();
             }
@@ -295,6 +365,167 @@
                         }
                     },
                     cutout: '65%'
+                }
+            });
+        }
+
+        // --- NEW FEATURE FUNCTIONS: Monthly & Yearly Column Chart ---
+        function setBarPeriod(period) {
+            barPeriodMode = period;
+            const btnMonthly = document.getElementById('btn-period-monthly');
+            const btnYearly = document.getElementById('btn-period-yearly');
+
+            if (period === 'monthly') {
+                btnMonthly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow cursor-pointer';
+                btnYearly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+            } else {
+                btnYearly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow cursor-pointer';
+                btnMonthly.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+            }
+
+            updatePeriodBarChart();
+        }
+
+        function setBarSort(sortType) {
+            barSortMode = sortType;
+            updatePeriodBarChart();
+        }
+
+        function updatePeriodBarChart() {
+            const grouped = {};
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            const getBucketInfo = (dateObj) => {
+                const year = dateObj.getFullYear();
+                if (barPeriodMode === 'yearly') {
+                    return {
+                        key: `${year}`,
+                        label: `${year}`,
+                        sortTime: new Date(year, 0, 1).getTime()
+                    };
+                } else {
+                    const month = dateObj.getMonth();
+                    const paddedMonth = String(month + 1).padStart(2, '0');
+                    return {
+                        key: `${year}-${paddedMonth}`,
+                        label: `${monthNames[month]} ${year}`,
+                        sortTime: new Date(year, month, 1).getTime()
+                    };
+                }
+            };
+
+            globalTransactions.forEach(tx => {
+                // Aggregate Deposits by Deposit Date
+                if (tx.cleanDepNum > 0) {
+                    const dDate = parseFlexibleDate(tx.depDate);
+                    if (dDate) {
+                        const bucket = getBucketInfo(dDate);
+                        if (!grouped[bucket.key]) {
+                            grouped[bucket.key] = { label: bucket.label, sortTime: bucket.sortTime, deposits: 0, withdrawals: 0 };
+                        }
+                        grouped[bucket.key].deposits += tx.cleanDepNum;
+                    }
+                }
+
+                // Aggregate Withdrawals by Withdraw Date
+                if (tx.cleanWitNum > 0) {
+                    const wDate = parseFlexibleDate(tx.witDate);
+                    if (wDate) {
+                        const bucket = getBucketInfo(wDate);
+                        if (!grouped[bucket.key]) {
+                            grouped[bucket.key] = { label: bucket.label, sortTime: bucket.sortTime, deposits: 0, withdrawals: 0 };
+                        }
+                        grouped[bucket.key].withdrawals += tx.cleanWitNum;
+                    }
+                }
+            });
+
+            let dataArray = Object.values(grouped);
+
+            // Apply selected sorting
+            dataArray.sort((a, b) => {
+                if (barSortMode === 'date-asc') return a.sortTime - b.sortTime;
+                if (barSortMode === 'date-desc') return b.sortTime - a.sortTime;
+                if (barSortMode === 'dep-desc') return b.deposits - a.deposits;
+                if (barSortMode === 'wit-desc') return b.withdrawals - a.withdrawals;
+                return 0;
+            });
+
+            const labels = dataArray.map(item => item.label);
+            const depositSeries = dataArray.map(item => item.deposits);
+            const withdrawSeries = dataArray.map(item => item.withdrawals);
+
+            const ctx = document.getElementById('periodBarChart').getContext('2d');
+            if (barChartInstance) {
+                barChartInstance.destroy();
+            }
+
+            barChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Deposits ($)',
+                            data: depositSeries,
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Total Withdrawals ($)',
+                            data: withdrawSeries,
+                            backgroundColor: 'rgba(244, 63, 94, 0.85)',
+                            borderColor: 'rgba(244, 63, 94, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { color: '#cbd5e1', font: { family: 'Inter', size: 12 } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const val = context.parsed.y || 0;
+                                    return `${context.dataset.label}: $${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { family: 'Inter', size: 11 },
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
                 }
             });
         }
