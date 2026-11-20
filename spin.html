@@ -523,6 +523,12 @@
     return clean.slice(0, 4) + "***";
   }
 
+  function formatFullPhone(item) {
+    const raw = item.phone || item.phoneKey || "";
+    const clean = normPhone(raw);
+    return clean || String(raw || "—").trim() || "—";
+  }
+
   function getEntries() {
     return Object.values(entriesByPhone || {});
   }
@@ -669,10 +675,11 @@
     }
 
     items.forEach((item, idx) => {
+      const fullPhone = formatFullPhone(item);
       const li = document.createElement("li");
       li.className = "assigned-item";
       li.innerHTML = `
-        <span><strong>${idx + 1}.</strong> ${esc(item.name)} <span class="sub">(${esc(maskPhone(item.phone))})</span></span>
+        <span><strong>${idx + 1}.</strong> ${esc(item.name)} <span class="sub">(${esc(fullPhone)})</span></span>
         <span class="month-tag">${esc(item.month)}</span>
       `;
       list.appendChild(li);
@@ -888,7 +895,7 @@
   }
 
   function openResultModal(entry) {
-    document.getElementById("modalSub").textContent = `${entry.name} • ${maskPhone(entry.phone)}`;
+    document.getElementById("modalSub").textContent = `${entry.name} • ${formatFullPhone(entry)}`;
     document.getElementById("modalMonth").textContent = String(entry.month).toUpperCase();
     document.getElementById("resultModal").style.display = "flex";
   }
