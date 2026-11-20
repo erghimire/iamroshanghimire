@@ -625,7 +625,7 @@
 
     badge.textContent = "Matched";
     badge.className = "badge matched";
-    okEl.textContent = `Verified: ${matched.name} (${maskPhone(matched.phone)}) is eligible to spin.`;
+    okEl.textContent = `Verified: ${matched.name} (${(matched.phone)}) is eligible to spin.`;
     spinBtn.disabled = false;
     spinBtn.textContent = "SPIN WHEEL";
   }
