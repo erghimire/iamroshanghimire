@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>12-Month Lucky Draw</title>
+<style>
+  :root {
+    --bg-top: #111827;
+    --bg-bottom: #030712;
+    --surface: rgba(17, 24, 39, 0.85);
+    --surface-2: #090d16;
+    --text: #f9fafb;
+    --muted: #9ca3af;
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #f59e0b;
+    --accent-2: #ec4899;
+    --success: #10b981;
+    --danger: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(245, 158, 11, 0.14), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.16), transparent 45%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 56px;
+  }
+
+  header {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 4vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #fcd34d, #f472b6, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  }
+
+  .locked-banner {
+    display: none;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+
+  .field-group {
+    margin-bottom: 14px;
+  }
+
+  .field-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #d1d5db;
+    margin-bottom: 6px;
+  }
+
+  .field-group input {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 0.98rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .field-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+  }
+
+  .field-group input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .status-msg {
+    color: #34d399;
+    font-size: 0.86rem;
+    min-height: 20px;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .error-msg {
+    color: var(--danger);
+    font-size: 0.86rem;
+    min-height: 20px;
+    margin-bottom: 10px;
+  }
+
+  .wheel-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .wheel-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 310px;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 20px;
+  }
+
+  .pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 28px solid #ffffff;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.65));
+    z-index: 10;
+  }
+
+  canvas#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08), 0 18px 36px rgba(0, 0, 0, 0.65);
+  }
+
+  .center-pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 42px;
+    height: 42px;
+    background: var(--surface-2);
+    border: 4px solid #ffffff;
+    border-radius: 50%;
+    z-index: 5;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #f59e0b, #ea580c);
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.3);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: #374151;
+    box-shadow: none;
+  }
+
+  .board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .board-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .taken-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .taken-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    gap: 10px;
+  }
+
+  .member-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .member-phone {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .month-pill {
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    background: rgba(16, 185, 129, 0.18);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    white-space: nowrap;
+  }
+
+  .empty-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 28px 12px;
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.82);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .modal-card {
+    background: #111827;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    border-radius: 24px;
+    padding: 30px 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  }
+
+  .modal-month {
+    font-size: 2.3rem;
+    font-weight: 800;
+    margin: 14px 0 22px;
+    padding: 14px;
+    border-radius: 16px;
+    background: rgba(245, 158, 11, 0.16);
+    color: #fbbf24;
+  }
+
+  canvas#confetti {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99;
+  }
+</style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <header>
+    <h1>12-Month Lucky Draw</h1>
+    <p class="subtitle">Check the assigned list on the left, then enter your name and phone number to spin once.</p>
+  </header>
+
+  <div class="container">
+    <!-- LEFT SIDE: ASSIGNED MONTHS LIST -->
+    <div class="card">
+      <div class="board-header">
+        <h2 id="boardTitle">Assigned Months (0 / 12)</h2>
+      </div>
+      <ul class="taken-list" id="takenList"></ul>
+    </div>
+
+    <!-- RIGHT SIDE: SPIN WHEEL & FORM -->
+    <div class="card">
+      <div class="locked-banner" id="lockedBanner"></div>
+
+      <div class="field-group">
+        <label for="playerName">Your Full Name</label>
+        <input type="text" id="playerName" placeholder="e.g. Alex Taylor" autocomplete="name" oninput="clearMessages()">
+      </div>
+
+      <div class="field-group">
+        <label for="playerPhone">Phone Number</label>
+        <input type="tel" id="playerPhone" placeholder="e.g. +61 400 000 000" autocomplete="tel" oninput="clearMessages()">
+      </div>
+
+      <div class="status-msg" id="statusMsg"></div>
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="wheel-box">
+        <div class="wheel-wrapper">
+          <div class="pointer"></div>
+          <canvas id="wheel" width="500" height="500"></canvas>
+          <div class="center-pin"></div>
+        </div>
+        <button class="btn" id="spinBtn" onclick="handleSpinClick()">ENTER DETAILS & SPIN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="resultModal">
+    <div class="modal-card">
+      <div id="modalPlayerInfo" style="color:#9ca3af; font-size:0.95rem;"></div>
+      <div style="font-size:1.15rem; margin-top:6px;">Your assigned month is</div>
+      <div class="modal-month" id="modalMonth">JANUARY</div>
+      <button type="button" class="btn" onclick="closeModal()">Lock In & Done</button>
+    </div>
+  </div>
+
+<script>
+  // Paste your Google Apps Script Web App URL below
+  const SYNC_ENDPOINT = "https://script.google.com/macros/s/AKfycbxuP_pD5Z-AX9Cnpvuy6Asl3bS8IhX7zLjzbdWAlFwX54nZaGtbuyY872IY6_LlUGpg/exec";
+  const STORAGE_KEY = "lucky_draw_fresh_v2";
+  const DEVICE_LOCK_KEY = "lucky_draw_device_used_v1";
+
+  const ALL_MONTHS = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+  ];
+
+  const COLORS = [
+    "#ef4444", "#f97316", "#f59e0b", "#84cc16",
+    "#10b981", "#06b6d4", "#3b82f6", "#6366f1",
+    "#8b5cf6", "#d946ef", "#ec4899", "#f43f5e"
+  ];
+
+  let entriesByPhone = {};
+  let currentRotation = 0;
+  let isSpinning = false;
+  let pendingEntry = null;
+  let pendingLatestByPhone = null;
+
+  function hasRemoteSync() {
+    return Boolean(SYNC_ENDPOINT && SYNC_ENDPOINT.trim().startsWith("http"));
+  }
+
+  function normalizeName(name) {
+    return String(name || "").trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  function normalizePhone(phone) {
+    let cleaned = String(phone || "").trim().replace(/[^\d+]/g, "");
+    if (cleaned.startsWith("00")) {
+      cleaned = "+" + cleaned.slice(2);
+    }
+    return cleaned;
+  }
+
+  function clearMessages() {
+    document.getElementById("errorMsg").textContent = "";
+    document.getElementById("statusMsg").textContent = "";
+  }
+
+  function getEntriesArray(sourceMap = entriesByPhone) {
+    return Object.values(sourceMap || {});
+  }
+
+  function getAvailableMonths(sourceMap = entriesByPhone) {
+    const taken = new Set(
+      getEntriesArray(sourceMap).map(e => String(e.month || "").toLowerCase())
+    );
+    return ALL_MONTHS.filter(m => !taken.has(m.toLowerCase()));
+  }
+
+  function saveLocal() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entriesByPhone));
+  }
+
+  function saveEntryForPhone(entry) {
+    const key = entry.phoneKey || normalizePhone(entry.phone);
+    entriesByPhone[key] = { ...entry, phoneKey: key };
+    saveLocal();
+  }
+
+  function lockDeviceForEntry(entry) {
+    if (!entry) return;
+    localStorage.setItem(DEVICE_LOCK_KEY, JSON.stringify(entry));
+    applyDeviceLockUI(entry);
+  }
+
+  function getLockedDeviceEntry() {
+    try {
+      const raw = localStorage.getItem(DEVICE_LOCK_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function applyDeviceLockUI(lockedEntry) {
+    if (!lockedEntry) return;
+    const nameInput = document.getElementById("playerName");
+    const phoneInput = document.getElementById("playerPhone");
+    const spinBtn = document.getElementById("spinBtn");
+    const banner = document.getElementById("lockedBanner");
+
+    nameInput.value = lockedEntry.name || "";
+    phoneInput.value = lockedEntry.phone || "";
+    nameInput.disabled = true;
+    phoneInput.disabled = true;
+
+    spinBtn.disabled = true;
+    spinBtn.textContent = "DRAW COMPLETED — LINK LOCKED";
+
+    banner.style.display = "block";
+    banner.innerHTML = `<strong>You have already completed your draw!</strong><br>${escapeHtml(lockedEntry.name)} (${escapeHtml(lockedEntry.phone)}) is assigned to <strong>${escapeHtml(lockedEntry.month)}</strong>. This link can no longer be used to spin again.`;
+  }
+
+  function findDuplicateDraw(rawName, rawPhone, sourceMap = entriesByPhone) {
+    const targetName = normalizeName(rawName);
+    const targetPhone = normalizePhone(rawPhone);
+    const currentList = getEntriesArray(sourceMap);
+
+    const phoneMatch = sourceMap[targetPhone] || currentList.find(
+      e => normalizePhone(e.phoneKey || e.phone) === targetPhone
+    );
+    if (phoneMatch) {
+      return `Phone number ${rawPhone} is already assigned (${phoneMatch.name} → ${phoneMatch.month}).`;
+    }
+
+    const nameMatch = currentList.find(
+      e => normalizeName(e.name) === targetName
+    );
+    if (nameMatch) {
+      return `Full name "${rawName}" is already assigned (${nameMatch.month}).`;
+    }
+
+    return null;
+  }
+
+  async function loadEntries() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        entriesByPhone = JSON.parse(raw) || {};
+      } catch {
+        entriesByPhone = {};
+      }
+    }
+
+    if (hasRemoteSync()) {
+      const errorEl = document.getElementById("errorMsg");
+      try {
+        const res = await fetch(SYNC_ENDPOINT, { method: "GET" });
+        const data = await res.json();
+        if (data && data.ok && data.byPhone) {
+          entriesByPhone = data.byPhone;
+          saveLocal();
+          errorEl.textContent = "";
+        }
+      } catch {
+        errorEl.textContent = "Server unreachable — showing saved records.";
+      }
+    }
+
+    renderBoard();
+    drawWheel();
+
+    const alreadySpunHere = getLockedDeviceEntry();
+    if (alreadySpunHere) {
+      applyDeviceLockUI(alreadySpunHere);
+    }
+  }
+
+  async function postToSync(payload) {
+    const res = await fetch(SYNC_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  }
+
+  async function handleSpinClick() {
+    if (isSpinning) return;
+    clearMessages();
+
+    const locked = getLockedDeviceEntry();
+    if (locked) {
+      applyDeviceLockUI(locked);
+      return;
+    }
+
+    const errorEl = document.getElementById("errorMsg");
+    const spinBtn = document.getElementById("spinBtn");
+    const rawName = document.getElementById("playerName").value.trim();
+    const rawPhone = document.getElementById("playerPhone").value.trim();
+    const phoneKey = normalizePhone(rawPhone);
+
+    if (!rawName) {
+      errorEl.textContent = "Please enter your full name.";
+      return;
+    }
+    if (phoneKey.replace(/\D/g, "").length < 6) {
+      errorEl.textContent = "Please enter a valid phone number.";
+      return;
+    }
+
+    if (hasRemoteSync()) {
+      spinBtn.disabled = true;
+      spinBtn.textContent = "CHECKING LIST...";
+      try {
+        const checkRes = await fetch(SYNC_ENDPOINT, { method: "GET" });
+        const checkData = await checkRes.json();
+        if (checkData && checkData.ok && checkData.byPhone) {
+          entriesByPhone = checkData.byPhone;
+          saveLocal();
+          renderBoard();
+          drawWheel();
+        }
+      } catch {
+        // Continue with local check if offline
+      }
+    }
+
+    const dupError = findDuplicateDraw(rawName, rawPhone, entriesByPhone);
+    if (dupError) {
+      errorEl.textContent = dupError;
+      spinBtn.disabled = false;
+      spinBtn.textContent = "ENTER DETAILS & SPIN";
+      return;
+    }
+
+    const availableMonths = getAvailableMonths(entriesByPhone);
+    if (availableMonths.length === 0) {
+      errorEl.textContent = "All 12 months have already been assigned!";
+      spinBtn.disabled = false;
+      spinBtn.textContent = "ENTER DETAILS & SPIN";
+      return;
+    }
+
+    if (hasRemoteSync()) {
+      spinBtn.disabled = true;
+      spinBtn.textContent = "LOCKING MONTH...";
+      try {
+        const lockRes = await postToSync({ name: rawName, phone: rawPhone });
+        if (!lockRes || !lockRes.ok || !lockRes.month) {
+          errorEl.textContent = (lockRes && lockRes.error) || "Could not assign a month.";
+          spinBtn.disabled = false;
+          spinBtn.textContent = "ENTER DETAILS & SPIN";
+          return;
+        }
+        const targetIndex = availableMonths.findIndex(
+          m => m.toLowerCase() === String(lockRes.month).toLowerCase()
+        );
+        pendingEntry = lockRes.entry || {
+          name: rawName,
+          phone: rawPhone,
+          phoneKey,
+          month: lockRes.month,
+          timestamp: new Date().toISOString()
+        };
+        pendingLatestByPhone = lockRes.byPhone || {
+          ...entriesByPhone,
+          [phoneKey]: pendingEntry
+        };
+        spinToSlice(targetIndex >= 0 ? targetIndex : 0, availableMonths);
+      } catch {
+        errorEl.textContent = "Network error while saving your spin.";
+        spinBtn.disabled = false;
+        spinBtn.textContent = "ENTER DETAILS & SPIN";
+      }
+      return;
+    }
+
+    const buf = new Uint32Array(1);
+    window.crypto.getRandomValues(buf);
+    const targetIndex = buf[0] % availableMonths.length;
+    const chosenMonth = availableMonths[targetIndex];
+
+    pendingEntry = {
+      name: rawName,
+      phone: rawPhone,
+      phoneKey,
+      month: chosenMonth,
+      timestamp: new Date().toISOString()
+    };
+    pendingLatestByPhone = {
+      ...entriesByPhone,
+      [phoneKey]: pendingEntry
+    };
+
+    spinToSlice(targetIndex, availableMonths);
+  }
+
+  function spinToSlice(targetIndex, wheelMonths) {
+    isSpinning = true;
+    const spinBtn = document.getElementById("spinBtn");
+    spinBtn.disabled = true;
+    spinBtn.textContent = "SPINNING...";
+
+    const count = wheelMonths.length;
+    const sliceAngle = (2 * Math.PI) / count;
+    const sliceCenter = (targetIndex + 0.5) * sliceAngle;
+    const targetNormalized = (-Math.PI / 2 - sliceCenter) % (2 * Math.PI);
+    const currentNormalized = currentRotation % (2 * Math.PI);
+
+    let delta = targetNormalized - currentNormalized;
+    if (delta < 0) delta += 2 * Math.PI;
+
+    const totalSpin = delta + 6 * 2 * Math.PI;
+    const startRotation = currentRotation;
+    const duration = 3400;
+    const startTime = performance.now();
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+
+      currentRotation = startRotation + totalSpin * easeOut;
+      drawWheel(wheelMonths);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        isSpinning = false;
+        entriesByPhone = pendingLatestByPhone || entriesByPhone;
+        if (pendingEntry) {
+          saveEntryForPhone(pendingEntry);
+          lockDeviceForEntry(pendingEntry);
+        }
+        renderBoard();
+        drawWheel();
+        showResultModal(pendingEntry);
+        pendingEntry = null;
+        pendingLatestByPhone = null;
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function drawWheel(monthsList = getAvailableMonths()) {
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const size = canvas.width;
+    const center = size / 2;
+    const radius = center - 4;
+
+    ctx.clearRect(0, 0, size, size);
+
+    const count = monthsList.length;
+    if (count === 0) {
+      ctx.fillStyle = "#111827";
+      ctx.beginPath();
+      ctx.arc(center, center, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#9ca3af";
+      ctx.font = "bold 22px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("All 12 Months Taken", center, center + 8);
+      return;
+    }
+
+    const sliceAngle = (2 * Math.PI) / count;
+
+    for (let i = 0; i < count; i++) {
+      const monthName = monthsList[i];
+      const colorIdx = ALL_MONTHS.indexOf(monthName);
+      const startAngle = currentRotation + i * sliceAngle;
+      const endAngle = startAngle + sliceAngle;
+
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = COLORS[colorIdx >= 0 ? colorIdx : i % COLORS.length];
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#090d16";
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(startAngle + sliceAngle / 2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = count > 6 ? "bold 19px sans-serif" : "bold 23px sans-serif";
+      ctx.shadowColor = "rgba(0,0,0,0.45)";
+      ctx.shadowBlur = 4;
+      ctx.fillText(monthName, radius - 22, 7);
+      ctx.restore();
+    }
+  }
+
+  function renderBoard() {
+    const list = document.getElementById("takenList");
+    const entries = getEntriesArray(entriesByPhone);
+    document.getElementById("boardTitle").textContent = `Assigned Months (${entries.length} / 12)`;
+    list.innerHTML = "";
+
+    if (entries.length === 0) {
+      list.innerHTML = `<li class="empty-note">No months assigned yet. Spin the wheel to add the first entry.</li>`;
+      return;
+    }
+
+    entries.forEach((item, idx) => {
+      const li = document.createElement("li");
+      li.className = "taken-item";
+      li.innerHTML = `
+        <div class="member-meta">
+          <span><strong>${idx + 1}.</strong> ${escapeHtml(item.name)}</span>
+          <span class="member-phone">${escapeHtml(item.phone)}</span>
+        </div>
+        <span class="month-pill">${escapeHtml(item.month)}</span>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  function showResultModal(entry) {
+    if (!entry) return;
+    document.getElementById("modalPlayerInfo").textContent = `${entry.name} • ${entry.phone}`;
+    document.getElementById("modalMonth").textContent = String(entry.month).toUpperCase();
+    document.getElementById("resultModal").style.display = "flex";
+    launchConfetti();
+  }
+
+  function closeModal() {
+    document.getElementById("resultModal").style.display = "none";
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[m]));
+  }
+
+  function launchConfetti() {
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = Array.from({ length: 70 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 100,
+      w: 8 + Math.random() * 6,
+      h: 8 + Math.random() * 6,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      vy: 3 + Math.random() * 4,
+      vx: -2 + Math.random() * 4,
+      rot: Math.random() * 360
+    }));
+
+    let frame = 0;
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += 5;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rot * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 100) requestAnimationFrame(render);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    render();
+  }
+
+  loadEntries();
+</script>
+</body>
+</html>
