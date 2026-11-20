@@ -713,11 +713,7 @@
 
     if (SYNC_ENDPOINT && SYNC_ENDPOINT.startsWith("http")) {
       try {
-        const res = await fetch(SYNC_ENDPOINT, {
-          method: "GET",
-          redirect: "follow"
-        });
-
+        const res = await fetch(SYNC_ENDPOINT, { method: "GET", redirect: "follow" });
         const rawText = await res.text();
         let data;
         try {
@@ -725,21 +721,16 @@
         } catch {
           throw new Error("Apps Script did not return valid JSON. Check deployment access ('Anyone').");
         }
-
         if (!data || data.ok === false) {
           throw new Error((data && data.error) || "Spreadsheet returned an error.");
         }
-
         const rawUsers = Array.isArray(data)
           ? data
           : (data.allowedUsers || data.referenceUsers || data.users || data.records || []);
-
         referenceUsers = rawUsers.map(normalizeUserRecord).filter(Boolean);
-
         if (data.byPhone && typeof data.byPhone === "object") {
           entriesByPhone = data.byPhone;
         }
-
         if (referenceUsers.length === 0) {
           loadError = "Spreadsheet returned 0 reference entries. Verify your Reference sheet tab name and rows.";
         }
